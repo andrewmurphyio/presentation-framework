@@ -115,21 +115,32 @@ while true; do
     # -p: Headless mode (non-interactive, reads from stdin)
     # --dangerously-skip-permissions: Auto-approve all tool calls (YOLO mode)
     # --model opus: Primary agent uses Opus for complex reasoning
-    # --verbose: Detailed execution logging
+    # --output-format stream-json: Streams output as it happens
+    # Pipe through jq to extract readable content from the JSON stream
 
     # For plan-work mode, substitute ${WORK_SCOPE} in prompt before piping
     if [ "$MODE" = "plan-work" ]; then
         envsubst < "$PROMPT_FILE" | claude -p \
             --dangerously-skip-permissions \
             --model opus \
-            --verbose \
-            --output-format text
+            --output-format stream-json \
+            2>&1 | while IFS= read -r line; do
+                # Extract text content from assistant messages
+                if echo "$line" | jq -e '.type == "assistant"' >/dev/null 2>&1; then
+                    echo "$line" | jq -r '.message.content[]? | select(.type == "text") | .text // empty' 2>/dev/null
+                fi
+            done
     else
         cat "$PROMPT_FILE" | claude -p \
             --dangerously-skip-permissions \
             --model opus \
-            --verbose \
-            --output-format text
+            --output-format stream-json \
+            2>&1 | while IFS= read -r line; do
+                # Extract text content from assistant messages
+                if echo "$line" | jq -e '.type == "assistant"' >/dev/null 2>&1; then
+                    echo "$line" | jq -r '.message.content[]? | select(.type == "text") | .text // empty' 2>/dev/null
+                fi
+            done
     fi
 
     # Push changes after each iteration (if git is available)
