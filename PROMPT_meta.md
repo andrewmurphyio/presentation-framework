@@ -14,13 +14,13 @@ RW is a workflow for AI agents to build software autonomously through iteration:
    - This is iterative and conversational - not batch spec generation
 
 2. **Phase 2: Planning** (Loop via plugin)
-   - Run `/ralph-loop` with PROMPT_plan.md content
+   - Run `/ralph-wiggum:ralph-loop` with PROMPT_plan.md content
    - Ralph reads specs, analyzes existing code, identifies gaps
    - Outputs `IMPLEMENTATION_PLAN.md` with prioritized tasks
    - No implementation, just planning
 
 3. **Phase 3: Building** (Loop via plugin)
-   - Run `/ralph-loop` with PROMPT_build.md content
+   - Run `/ralph-wiggum:ralph-loop` with PROMPT_build.md content
    - Ralph picks most important task from plan
    - Implements, tests, commits
    - Updates plan, loop restarts with fresh context
@@ -39,35 +39,37 @@ claude plugin install ralph-wiggum
 
 ```bash
 cd /path/to/project
-claude
+claude --dangerously-skip-permissions
 ```
+
+Note: `--dangerously-skip-permissions` is recommended for Ralph loops to avoid repeated permission prompts. Only use this in trusted project directories.
 
 Then in Claude Code:
 ```
-/ralph-loop "$(cat PROMPT_plan.md)" --max-iterations 10
+/ralph-wiggum:ralph-loop "Read PROMPT_plan.md and follow its instructions exactly." --max-iterations 10
 ```
 
 ### Building Mode
 
 ```
-/ralph-loop "$(cat PROMPT_build.md)" --max-iterations 20
+/ralph-wiggum:ralph-loop "Read PROMPT_build.md and follow its instructions exactly." --max-iterations 20
 ```
 
 ### Scoped Work (on a branch)
 
 ```bash
 git checkout -b ralph/design-system
-claude
+claude --dangerously-skip-permissions
 ```
 
 Then:
 ```
-/ralph-loop "Focus on design system tokens and theming. $(cat PROMPT_build.md)" --max-iterations 15
+/ralph-wiggum:ralph-loop "Focus on design system tokens and theming. Read PROMPT_plan.md and follow its instructions exactly." --max-iterations 15
 ```
 
 ### Controlling the Loop
 
-- **Stop anytime**: `/cancel-ralph`
+- **Stop anytime**: `/ralph-wiggum:cancel-ralph`
 - **Set iteration limit**: `--max-iterations N` (always set this!)
 - **Completion signal**: `--completion-promise "DONE"` (optional, exact string match)
 
@@ -140,19 +142,19 @@ The build loop instructs Ralph to:
 
 ```bash
 # 1. Full planning on main
-cd /path/to/project && claude
-/ralph-loop "$(cat PROMPT_plan.md)" --max-iterations 10
+cd /path/to/project && claude --dangerously-skip-permissions
+/ralph-wiggum:ralph-loop "Read PROMPT_plan.md and follow its instructions exactly." --max-iterations 10
 # → Full IMPLEMENTATION_PLAN.md for entire project
 
 # 2. Create work branch
 git checkout -b ralph/design-system
 
 # 3. Scoped planning on work branch
-/ralph-loop "Focus on design system only. $(cat PROMPT_plan.md)" --max-iterations 5
+/ralph-wiggum:ralph-loop "Focus on design system only. Read PROMPT_plan.md and follow its instructions exactly." --max-iterations 5
 # → Creates IMPLEMENTATION_PLAN.md with only design system tasks
 
 # 4. Build on work branch
-/ralph-loop "$(cat PROMPT_build.md)" --max-iterations 20
+/ralph-wiggum:ralph-loop "Read PROMPT_build.md and follow its instructions exactly." --max-iterations 20
 # → Ralph works through scoped plan, commits each task
 
 # 5. PR when done
@@ -165,7 +167,7 @@ gh pr create --base main --head ralph/design-system
 - **Plan is disposable** - regenerate if wrong, stale, or cluttered
 - **No branch switching within a loop session** - Ralph stays on current branch
 - **User creates branches manually** - you control naming conventions
-- **Escape hatches**: `/cancel-ralph` stops loop, `git reset --hard` reverts uncommitted changes
+- **Escape hatches**: `/ralph-wiggum:cancel-ralph` stops loop, `git reset --hard` reverts uncommitted changes
 
 ## Good Practices for Phase 1 (Requirements)
 
@@ -216,4 +218,4 @@ When this prompt is loaded, you are in meta mode. You should:
 4. Keep the human in the loop on key decisions
 5. NOT start implementing or making technology choices
 
-To exit meta mode and start a loop, the human runs `/ralph-loop` with the appropriate prompt.
+To exit meta mode and start a loop, the human runs `/ralph-wiggum:ralph-loop` with the appropriate prompt.

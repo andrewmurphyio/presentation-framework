@@ -27,12 +27,12 @@ This project is built using the **Ralph Wiggum (RW)** methodology - an AI-agent-
 - Each spec focuses on outcomes and acceptance criteria, not implementation
 
 **Phase 2: Planning** (Loop via plugin)
-- Run `/ralph-loop` with planning prompt
+- Run `/ralph-wiggum:ralph-loop` with planning prompt
 - AI agent analyzes specs and existing code
 - Outputs prioritized task list in `IMPLEMENTATION_PLAN.md`
 
 **Phase 3: Building** (Loop via plugin)
-- Run `/ralph-loop` with build prompt
+- Run `/ralph-wiggum:ralph-loop` with build prompt
 - Agent picks highest priority task
 - Implements, tests, commits, pushes
 - Regenerates plan with fresh context, repeats
@@ -85,40 +85,42 @@ claude plugin install ralph-wiggum
 Start Claude Code in the project directory:
 ```bash
 cd presentation-framework
-claude
+claude --dangerously-skip-permissions
 ```
+
+Note: `--dangerously-skip-permissions` is recommended for Ralph loops to avoid repeated permission prompts. Only use this in trusted project directories.
 
 **Planning:**
 ```
-/ralph-loop "$(cat PROMPT_plan.md)" --max-iterations 10
+/ralph-wiggum:ralph-loop "Read PROMPT_plan.md and follow its instructions exactly." --max-iterations 10
 ```
 
 **Building:**
 ```
-/ralph-loop "$(cat PROMPT_build.md)" --max-iterations 20
+/ralph-wiggum:ralph-loop "Read PROMPT_build.md and follow its instructions exactly." --max-iterations 20
 ```
 
 **Scoped Work (on a branch):**
 ```bash
 git checkout -b ralph/design-system
-claude
+claude --dangerously-skip-permissions
 ```
 ```
-/ralph-loop "Focus on design system only. $(cat PROMPT_plan.md)" --max-iterations 5
+/ralph-wiggum:ralph-loop "Focus on design system only. Read PROMPT_plan.md and follow its instructions exactly." --max-iterations 5
 ```
 
 ### Workflow
 
 1. **Define requirements** - Work conversationally with AI to create/refine specs
-2. **Plan** - Run `/ralph-loop` with PROMPT_plan.md to generate implementation plan
+2. **Plan** - Run `/ralph-wiggum:ralph-loop` with PROMPT_plan.md to generate implementation plan
 3. **Create work branch** - `git checkout -b ralph/feature-name`
-4. **Scoped planning** - Run `/ralph-loop` with scoped prompt
-5. **Build** - Run `/ralph-loop` with PROMPT_build.md
+4. **Scoped planning** - Run `/ralph-wiggum:ralph-loop` with scoped prompt
+5. **Build** - Run `/ralph-wiggum:ralph-loop` with PROMPT_build.md
 6. **Create PR** - `gh pr create` when complete
 
 ### Controlling the Loop
 
-- `/cancel-ralph` - Stop the loop cleanly
+- `/ralph-wiggum:cancel-ralph` - Stop the loop cleanly
 - `--max-iterations N` - Always set a limit!
 - `git reset --hard` - Revert uncommitted changes if needed
 
