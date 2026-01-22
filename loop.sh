@@ -122,12 +122,14 @@ while true; do
         envsubst < "$PROMPT_FILE" | claude -p \
             --dangerously-skip-permissions \
             --model opus \
-            --verbose
+            --verbose \
+            --output-format text
     else
         cat "$PROMPT_FILE" | claude -p \
             --dangerously-skip-permissions \
             --model opus \
-            --verbose
+            --verbose \
+            --output-format text
     fi
 
     # Push changes after each iteration (if git is available)
