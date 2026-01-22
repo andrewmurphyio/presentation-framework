@@ -114,7 +114,6 @@ while true; do
     # Run Ralph iteration with selected prompt
     # -p: Headless mode (non-interactive, reads from stdin)
     # --dangerously-skip-permissions: Auto-approve all tool calls (YOLO mode)
-    # --output-format=stream-json: Structured output for logging/monitoring
     # --model opus: Primary agent uses Opus for complex reasoning
     # --verbose: Detailed execution logging
 
@@ -122,13 +121,11 @@ while true; do
     if [ "$MODE" = "plan-work" ]; then
         envsubst < "$PROMPT_FILE" | claude -p \
             --dangerously-skip-permissions \
-            --output-format=stream-json \
             --model opus \
             --verbose
     else
         cat "$PROMPT_FILE" | claude -p \
             --dangerously-skip-permissions \
-            --output-format=stream-json \
             --model opus \
             --verbose
     fi
