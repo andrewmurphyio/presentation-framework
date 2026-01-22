@@ -13,17 +13,71 @@ RW is a workflow for AI agents to build software autonomously through iteration:
    - LLM writes `specs/*.md` for each topic AS understanding develops
    - This is iterative and conversational - not batch spec generation
 
-2. **Phase 2: Planning** (Loop)
-   - Run `./loop.sh plan`
+2. **Phase 2: Planning** (Loop via plugin)
+   - Run `/ralph-loop` with PROMPT_plan.md content
    - Ralph reads specs, analyzes existing code, identifies gaps
    - Outputs `IMPLEMENTATION_PLAN.md` with prioritized tasks
    - No implementation, just planning
 
-3. **Phase 3: Building** (Loop)
-   - Run `./loop.sh` or `./loop.sh [max_iterations]`
+3. **Phase 3: Building** (Loop via plugin)
+   - Run `/ralph-loop` with PROMPT_build.md content
    - Ralph picks most important task from plan
    - Implements, tests, commits
    - Updates plan, loop restarts with fresh context
+
+## Running the Loop (ralph-wiggum plugin)
+
+This project uses the **ralph-wiggum Claude Code plugin** for looping.
+
+### Installation
+
+```bash
+claude plugin install ralph-wiggum
+```
+
+### Planning Mode
+
+```bash
+cd /path/to/project
+claude
+```
+
+Then in Claude Code:
+```
+/ralph-loop "$(cat PROMPT_plan.md)" --max-iterations 10
+```
+
+### Building Mode
+
+```
+/ralph-loop "$(cat PROMPT_build.md)" --max-iterations 20
+```
+
+### Scoped Work (on a branch)
+
+```bash
+git checkout -b ralph/design-system
+claude
+```
+
+Then:
+```
+/ralph-loop "Focus on design system tokens and theming. $(cat PROMPT_build.md)" --max-iterations 15
+```
+
+### Controlling the Loop
+
+- **Stop anytime**: `/cancel-ralph`
+- **Set iteration limit**: `--max-iterations N` (always set this!)
+- **Completion signal**: `--completion-promise "DONE"` (optional, exact string match)
+
+### Why the Plugin?
+
+The plugin uses a Stop hook inside Claude Code's interactive session. This means:
+- You see all output in real-time
+- You can interrupt after any tool use
+- Full interactive UI experience
+- No buffering issues
 
 ## What Ralph Wiggum IS NOT
 
@@ -86,18 +140,19 @@ The build loop instructs Ralph to:
 
 ```bash
 # 1. Full planning on main
-./loop.sh plan
+cd /path/to/project && claude
+/ralph-loop "$(cat PROMPT_plan.md)" --max-iterations 10
 # → Full IMPLEMENTATION_PLAN.md for entire project
 
 # 2. Create work branch
 git checkout -b ralph/design-system
 
 # 3. Scoped planning on work branch
-./loop.sh plan-work "design system tokens and theming"
+/ralph-loop "Focus on design system only. $(cat PROMPT_plan.md)" --max-iterations 5
 # → Creates IMPLEMENTATION_PLAN.md with only design system tasks
 
 # 4. Build on work branch
-./loop.sh
+/ralph-loop "$(cat PROMPT_build.md)" --max-iterations 20
 # → Ralph works through scoped plan, commits each task
 
 # 5. PR when done
@@ -110,7 +165,7 @@ gh pr create --base main --head ralph/design-system
 - **Plan is disposable** - regenerate if wrong, stale, or cluttered
 - **No branch switching within a loop session** - Ralph stays on current branch
 - **User creates branches manually** - you control naming conventions
-- **Escape hatches**: `Ctrl+C` stops loop, `git reset --hard` reverts uncommitted changes
+- **Escape hatches**: `/cancel-ralph` stops loop, `git reset --hard` reverts uncommitted changes
 
 ## Good Practices for Phase 1 (Requirements)
 
@@ -140,9 +195,7 @@ gh pr create --base main --head ralph/design-system
 
 ```
 project/
-├── loop.sh                  # Outer loop script (plan, plan-work, build modes)
 ├── PROMPT_plan.md           # Full planning mode prompt
-├── PROMPT_plan_work.md      # Scoped planning mode prompt (for work branches)
 ├── PROMPT_build.md          # Building mode prompt
 ├── PROMPT_meta.md           # This file - methodology guide
 ├── AGENTS.md                # Operational guide (minimal until code exists)
@@ -163,4 +216,4 @@ When this prompt is loaded, you are in meta mode. You should:
 4. Keep the human in the loop on key decisions
 5. NOT start implementing or making technology choices
 
-To exit meta mode and start a loop, the human will run `./loop.sh plan` or `./loop.sh`.
+To exit meta mode and start a loop, the human runs `/ralph-loop` with the appropriate prompt.

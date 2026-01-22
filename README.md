@@ -26,13 +26,13 @@ This project is built using the **Ralph Wiggum (RW)** methodology - an AI-agent-
 - Create specification files in `specs/*.md` as understanding develops
 - Each spec focuses on outcomes and acceptance criteria, not implementation
 
-**Phase 2: Planning** (Automated Loop)
-- Run `./loop.sh plan` to generate implementation plan
+**Phase 2: Planning** (Loop via plugin)
+- Run `/ralph-loop` with planning prompt
 - AI agent analyzes specs and existing code
 - Outputs prioritized task list in `IMPLEMENTATION_PLAN.md`
 
-**Phase 3: Building** (Automated Loop)
-- Run `./loop.sh` to start build iterations
+**Phase 3: Building** (Loop via plugin)
+- Run `/ralph-loop` with build prompt
 - Agent picks highest priority task
 - Implements, tests, commits, pushes
 - Regenerates plan with fresh context, repeats
@@ -48,9 +48,7 @@ This project is built using the **Ralph Wiggum (RW)** methodology - an AI-agent-
 
 ```
 presentation-framework/
-├── loop.sh                  # Outer loop script (plan/build modes)
-├── PROMPT_plan.md           # Planning mode prompt for full project
-├── PROMPT_plan_work.md      # Scoped planning prompt for work branches
+├── PROMPT_plan.md           # Planning mode prompt
 ├── PROMPT_build.md          # Building mode prompt
 ├── PROMPT_meta.md           # Methodology guide
 ├── AGENTS.md                # Operational guide (builds/tests/deployments)
@@ -72,41 +70,56 @@ presentation-framework/
 ### Prerequisites
 
 - [Claude Code CLI](https://docs.claude.com/en/docs/claude-code) installed
+- [ralph-wiggum plugin](https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum) installed
 - Git repository initialized
 - Access to Claude Opus/Sonnet models
 
-### Running the Loop
+### Install the Plugin
 
-**Full Planning (on main branch):**
 ```bash
-./loop.sh plan              # Generate full project plan
-./loop.sh plan 5            # Limit to 5 iterations
+claude plugin install ralph-wiggum
 ```
 
-**Scoped Planning (on work branches):**
+### Running the Loop
+
+Start Claude Code in the project directory:
 ```bash
-git checkout -b ralph/design-system
-./loop.sh plan-work "design system tokens and theming"
+cd presentation-framework
+claude
+```
+
+**Planning:**
+```
+/ralph-loop "$(cat PROMPT_plan.md)" --max-iterations 10
 ```
 
 **Building:**
+```
+/ralph-loop "$(cat PROMPT_build.md)" --max-iterations 20
+```
+
+**Scoped Work (on a branch):**
 ```bash
-./loop.sh                   # Build with unlimited iterations
-./loop.sh 20                # Build with max 20 iterations
+git checkout -b ralph/design-system
+claude
+```
+```
+/ralph-loop "Focus on design system only. $(cat PROMPT_plan.md)" --max-iterations 5
 ```
 
 ### Workflow
 
 1. **Define requirements** - Work conversationally with AI to create/refine specs
-2. **Plan** - Run `./loop.sh plan` to generate implementation plan
+2. **Plan** - Run `/ralph-loop` with PROMPT_plan.md to generate implementation plan
 3. **Create work branch** - `git checkout -b ralph/feature-name`
-4. **Scoped planning** - `./loop.sh plan-work "feature description"`
-5. **Build** - `./loop.sh` to execute the plan
+4. **Scoped planning** - Run `/ralph-loop` with scoped prompt
+5. **Build** - Run `/ralph-loop` with PROMPT_build.md
 6. **Create PR** - `gh pr create` when complete
 
-### Stopping the Loop
+### Controlling the Loop
 
-- `Ctrl+C` - Stop the current loop
+- `/cancel-ralph` - Stop the loop cleanly
+- `--max-iterations N` - Always set a limit!
 - `git reset --hard` - Revert uncommitted changes if needed
 
 ## Specifications
