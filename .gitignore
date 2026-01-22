@@ -4,3 +4,6 @@ dist/
 *.log
 .env
 .env.*
+coverage/
+.vitest-cache/
+*.tsbuildinfo
