@@ -4,12 +4,17 @@ set -euo pipefail
 # Usage:
 #   ./loop.sh [plan] [max_iterations]       # Plan/build on current branch
 #   ./loop.sh plan-work "work description"  # Create scoped plan on work branch
+#
+# Environment variables:
+#   RALPH_STREAM=1                          # Show real-time streaming output (as JSON)
+#
 # Examples:
 #   ./loop.sh                               # Build mode, unlimited
 #   ./loop.sh 20                            # Build mode, max 20
 #   ./loop.sh plan                          # Full planning, unlimited
 #   ./loop.sh plan 5                        # Full planning, max 5
 #   ./loop.sh plan-work "design system"     # Scoped planning for design system work
+#   RALPH_STREAM=1 ./loop.sh plan           # Planning with real-time JSON output
 
 # Parse arguments
 MODE="build"
@@ -111,12 +116,22 @@ while true; do
     echo "======================== LOOP $((ITERATION + 1)) ========================"
     echo ""
 
-    # Run Ralph iteration - Geoff's approach: pipe prompt to claude
-    # For plan-work mode, substitute ${WORK_SCOPE} in prompt first
+    # Run Ralph iteration
+    # Use -p (print mode) for non-interactive execution
+    # Note: Output appears after completion unless RALPH_STREAM=1
+    # Ctrl+C works to interrupt at any time
     if [ "$MODE" = "plan-work" ]; then
-        envsubst < "$PROMPT_FILE" | claude --dangerously-skip-permissions --model opus
+        PROMPT=$(envsubst < "$PROMPT_FILE")
     else
-        cat "$PROMPT_FILE" | claude --dangerously-skip-permissions --model opus
+        PROMPT=$(cat "$PROMPT_FILE")
+    fi
+
+    if [ "${RALPH_STREAM:-}" = "1" ]; then
+        # Real-time streaming (JSON format)
+        echo "$PROMPT" | claude -p --dangerously-skip-permissions --model opus --output-format stream-json --verbose
+    else
+        # Standard mode (text output after completion)
+        echo "$PROMPT" | claude -p --dangerously-skip-permissions --model opus
     fi
 
     # Push changes after each iteration (if git is available)
