@@ -111,20 +111,12 @@ while true; do
     echo "======================== LOOP $((ITERATION + 1)) ========================"
     echo ""
 
-    # Run Ralph iteration with selected prompt
-    # -p: Headless mode (non-interactive, reads from stdin)
-    # --dangerously-skip-permissions: Auto-approve all tool calls (YOLO mode)
-    # --model opus: Primary agent uses Opus for complex reasoning
-
-    # For plan-work mode, substitute ${WORK_SCOPE} in prompt before piping
+    # Run Ralph iteration - Geoff's approach: pipe prompt to claude
+    # For plan-work mode, substitute ${WORK_SCOPE} in prompt first
     if [ "$MODE" = "plan-work" ]; then
-        envsubst < "$PROMPT_FILE" | claude -p \
-            --dangerously-skip-permissions \
-            --model opus
+        envsubst < "$PROMPT_FILE" | claude --dangerously-skip-permissions --model opus
     else
-        cat "$PROMPT_FILE" | claude -p \
-            --dangerously-skip-permissions \
-            --model opus
+        cat "$PROMPT_FILE" | claude --dangerously-skip-permissions --model opus
     fi
 
     # Push changes after each iteration (if git is available)
