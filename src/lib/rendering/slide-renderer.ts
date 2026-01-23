@@ -2,8 +2,16 @@ import type { Slide } from '../types/slide';
 import type { Theme, CSSVariables } from '../types/theme';
 import type { LayoutDefinition } from '../types/layout';
 import type { CustomLayoutDefinition } from '../types/deck';
+import type { PresentationComponent } from '../types/component';
 import { layoutRegistry } from '../design-system/layout-registry';
 import { LayoutResolver } from '../design-system/layout-resolver';
+import { componentRegistry } from '../components/component-registry';
+
+// Import component renderers to ensure they're registered
+import '../components/code-block';
+import '../components/list';
+import '../components/callout';
+import '../components/image';
 
 /**
  * SlideRenderer converts slide definitions to HTML
@@ -53,7 +61,7 @@ export class SlideRenderer {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${this.escapeHtml(slide.content.title || 'Slide')}</title>
+  <title>${this.escapeHtml(typeof slide.content.title === 'string' ? slide.content.title : 'Slide')}</title>
   ${styleTag}
 </head>
 <body>
@@ -171,7 +179,7 @@ ${varsString}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${this.escapeHtml(slide.content.title || 'Slide')}</title>
+  <title>${this.escapeHtml(typeof slide.content.title === 'string' ? slide.content.title : 'Slide')}</title>
   ${styleTag}
 </head>
 <body>
@@ -184,6 +192,7 @@ ${varsString}
 
   /**
    * Generate slide content HTML with zone mapping
+   * Supports both string content and component objects
    */
   private generateSlideContent(
     slide: Slide,
@@ -191,15 +200,43 @@ ${varsString}
   ): string {
     return layout.zones
       .map((zone) => {
-        const content = slide.content[zone.name] || '';
+        const content = slide.content[zone.name];
         if (!content) return '';
+
+        // Render the zone content (string or component/components)
+        const renderedContent = this.renderZoneContent(content);
 
         return `
     <div class="slide-zone zone-${zone.name}">
-      ${this.escapeHtml(content)}
+      ${renderedContent}
     </div>`;
       })
       .join('');
+  }
+
+  /**
+   * Render zone content - handles strings, components, and arrays of components
+   */
+  private renderZoneContent(
+    content: string | PresentationComponent | PresentationComponent[]
+  ): string {
+    // Handle array of components
+    if (Array.isArray(content)) {
+      return content.map((item) => this.renderZoneContent(item)).join('\n');
+    }
+
+    // Handle single component object
+    if (typeof content === 'object' && content !== null && 'type' in content) {
+      if (componentRegistry.hasRenderer(content.type)) {
+        const renderer = componentRegistry.getRenderer(content.type);
+        return renderer(content);
+      }
+      // Fallback: if no renderer found, return empty string
+      return '';
+    }
+
+    // Handle string content (legacy)
+    return this.escapeHtml(content);
   }
 
   /**

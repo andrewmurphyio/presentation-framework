@@ -15,7 +15,7 @@ export type { Theme, CSSVariables } from './theme';
 
 export type { LayoutZone, LayoutDefinition } from './layout';
 
-export type { Slide, SlideContent } from './slide';
+export type { Slide, SlideContent, ZoneContent } from './slide';
 
 export type { Deck, DeckMetadata } from './deck';
 

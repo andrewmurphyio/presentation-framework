@@ -241,8 +241,15 @@ export class DeckRenderer {
         }
       }
 
-      // Support HTML content (as per SlideContent type definition)
-      zoneDiv.innerHTML = content;
+      // Support HTML content and components
+      if (typeof content === 'string') {
+        zoneDiv.innerHTML = content;
+      } else {
+        // For components, we need to render them to HTML
+        // This will be handled when component rendering is integrated with DeckRenderer
+        // For now, just skip non-string content
+        zoneDiv.textContent = '[Component rendering in DeckRenderer not yet implemented]';
+      }
       slideElement.appendChild(zoneDiv);
     });
   }

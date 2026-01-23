@@ -5,12 +5,19 @@
  * Each slide references a layout and provides content for that layout's zones.
  */
 
+import type { PresentationComponent } from './component';
+
+/**
+ * Zone content value - can be a string, a component, or an array of components
+ */
+export type ZoneContent = string | PresentationComponent | PresentationComponent[];
+
 /**
  * Content for a slide, mapped by zone name
  * Keys are zone names (e.g., "title", "content")
- * Values are HTML strings or plain text
+ * Values can be strings (plain text/HTML) or components
  */
-export type SlideContent = Record<string, string>;
+export type SlideContent = Record<string, ZoneContent>;
 
 /**
  * A single slide in a presentation

@@ -1,4 +1,4 @@
-import type { Slide } from '../types/slide';
+import type { Slide, SlideContent } from '../types/slide';
 import type { LayoutDefinition } from '../types/layout';
 import type { Theme } from '../types/theme';
 import type {
@@ -63,17 +63,22 @@ export class DebugDataCollector {
    */
   private collectLayoutInfo(
     layout: LayoutDefinition,
-    content: Record<string, string>
+    content: SlideContent
   ): DebugLayoutInfo {
     const zones: DebugZoneInfo[] = layout.zones.map((zone) => {
       const zoneContent = content[zone.name];
-      const hasContent = zoneContent !== undefined && zoneContent.length > 0;
+      const hasContent = zoneContent !== undefined;
+      const contentLength = typeof zoneContent === 'string'
+        ? zoneContent.length
+        : Array.isArray(zoneContent)
+        ? zoneContent.length
+        : undefined;
 
       return {
         name: zone.name,
         gridArea: zone.gridArea || zone.name,
         populated: hasContent,
-        contentLength: zoneContent !== undefined ? zoneContent.length : undefined,
+        contentLength,
       };
     });
 
@@ -128,7 +133,7 @@ export class DebugDataCollector {
    * Map content to zones with metadata
    */
   private collectContentInfo(
-    content: Record<string, string>,
+    content: SlideContent,
     layout: LayoutDefinition
   ): Record<string, DebugContentInfo> {
     const contentInfo: Record<string, DebugContentInfo> = {};
@@ -136,11 +141,18 @@ export class DebugDataCollector {
     // Process each zone in the layout
     layout.zones.forEach((zone) => {
       const zoneName = zone.name;
-      const value = content[zoneName] || '';
+      const zoneContent = content[zoneName];
+
+      // Convert component to string representation for debug display
+      const value = typeof zoneContent === 'string'
+        ? zoneContent
+        : zoneContent
+        ? '[Component]'
+        : '';
 
       contentInfo[zoneName] = {
         value,
-        length: value.length,
+        length: typeof zoneContent === 'string' ? zoneContent.length : 0,
         zone: zoneName,
       };
     });

@@ -8,6 +8,7 @@ import { defaultTokens } from '@/lib/design-system/default-tokens';
 import { CustomLayoutBuilder } from '@/lib/design-system/custom-layout-builder';
 import type { Slide } from '@/lib/types/slide';
 import type { CustomLayoutDefinition } from '@/lib/types/deck';
+import type { PresentationComponent } from '@/lib/types/component';
 
 describe('SlideRenderer', () => {
   let renderer: SlideRenderer;
@@ -347,6 +348,210 @@ describe('SlideRenderer', () => {
       };
 
       expect(() => renderer.render(invalidSlide, theme)).toThrow();
+    });
+  });
+
+  describe('component rendering', () => {
+    beforeEach(() => {
+      // Ensure title layout is registered
+      layoutRegistry.registerLayout('title', titleLayout);
+    });
+
+    it('should render a slide with a CodeBlock component', () => {
+      const slideWithCode: Slide = {
+        id: 'code-slide',
+        layout: 'title',
+        content: {
+          title: 'Code Example',
+          subtitle: {
+            type: 'code-block',
+            language: 'javascript',
+            code: 'console.log("Hello World");',
+          },
+        },
+      };
+
+      const html = renderer.render(slideWithCode, theme);
+
+      expect(html).toContain('Code Example');
+      expect(html).toContain('language-javascript');
+      expect(html).toContain('console.log(&quot;Hello World&quot;);');
+      expect(html).toContain('code-block-container');
+    });
+
+    it('should render a slide with a List component', () => {
+      const slideWithList: Slide = {
+        id: 'list-slide',
+        layout: 'title',
+        content: {
+          title: 'Todo List',
+          subtitle: {
+            type: 'list',
+            variant: 'checklist',
+            items: [
+              { text: 'Item 1', checked: true },
+              { text: 'Item 2', checked: false },
+            ],
+          },
+        },
+      };
+
+      const html = renderer.render(slideWithList, theme);
+
+      expect(html).toContain('Todo List');
+      expect(html).toContain('list-checklist');
+      expect(html).toContain('Item 1');
+      expect(html).toContain('Item 2');
+      expect(html).toContain('type="checkbox"');
+    });
+
+    it('should render a slide with a Callout component', () => {
+      const slideWithCallout: Slide = {
+        id: 'callout-slide',
+        layout: 'title',
+        content: {
+          title: 'Important Notice',
+          subtitle: {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Warning',
+            content: 'Please read this carefully',
+          },
+        },
+      };
+
+      const html = renderer.render(slideWithCallout, theme);
+
+      expect(html).toContain('Important Notice');
+      expect(html).toContain('callout-warning');
+      expect(html).toContain('Warning');
+      expect(html).toContain('Please read this carefully');
+    });
+
+    it('should render a slide with an Image component', () => {
+      const slideWithImage: Slide = {
+        id: 'image-slide',
+        layout: 'title',
+        content: {
+          title: 'Diagram',
+          subtitle: {
+            type: 'image',
+            src: '/diagram.png',
+            alt: 'Architecture diagram',
+            fitMode: 'contain',
+          },
+        },
+      };
+
+      const html = renderer.render(slideWithImage, theme);
+
+      expect(html).toContain('Diagram');
+      expect(html).toContain('src="/diagram.png"');
+      expect(html).toContain('alt="Architecture diagram"');
+      expect(html).toContain('image-fit-contain');
+    });
+
+    it('should render a slide with multiple components in an array', () => {
+      const slideWithMultiple: Slide = {
+        id: 'multi-slide',
+        layout: 'title',
+        content: {
+          title: 'Multiple Components',
+          subtitle: [
+            {
+              type: 'callout',
+              calloutType: 'info',
+              content: 'First component',
+            },
+            {
+              type: 'list',
+              variant: 'bullet',
+              items: [{ text: 'Item 1' }, { text: 'Item 2' }],
+            },
+          ],
+        },
+      };
+
+      const html = renderer.render(slideWithMultiple, theme);
+
+      expect(html).toContain('Multiple Components');
+      expect(html).toContain('callout-info');
+      expect(html).toContain('First component');
+      expect(html).toContain('list-bullet');
+      expect(html).toContain('Item 1');
+      expect(html).toContain('Item 2');
+    });
+
+    it('should still support string content (backward compatibility)', () => {
+      const slideWithStrings: Slide = {
+        id: 'string-slide',
+        layout: 'title',
+        content: {
+          title: 'String Title',
+          subtitle: 'String Subtitle',
+        },
+      };
+
+      const html = renderer.render(slideWithStrings, theme);
+
+      expect(html).toContain('String Title');
+      expect(html).toContain('String Subtitle');
+    });
+
+    it('should escape HTML in string content', () => {
+      const slideWithHTML: Slide = {
+        id: 'html-slide',
+        layout: 'title',
+        content: {
+          title: '<script>alert("xss")</script>',
+          subtitle: 'Safe subtitle',
+        },
+      };
+
+      const html = renderer.render(slideWithHTML, theme);
+
+      expect(html).toContain('&lt;script&gt;');
+      expect(html).not.toContain('<script>alert');
+    });
+
+    it('should handle mix of strings and components', () => {
+      const slideWithMix: Slide = {
+        id: 'mix-slide',
+        layout: 'title',
+        content: {
+          title: 'Mixed Content',
+          subtitle: {
+            type: 'code-block',
+            language: 'python',
+            code: 'print("test")',
+          },
+        },
+      };
+
+      const html = renderer.render(slideWithMix, theme);
+
+      expect(html).toContain('Mixed Content'); // string
+      expect(html).toContain('language-python'); // component
+      expect(html).toContain('print(&quot;test&quot;)');
+    });
+
+    it('should handle unknown component types gracefully', () => {
+      const slideWithUnknown: Slide = {
+        id: 'unknown-slide',
+        layout: 'title',
+        content: {
+          title: 'Title',
+          subtitle: {
+            type: 'unknown-component-type',
+          } as unknown as PresentationComponent,
+        },
+      };
+
+      const html = renderer.render(slideWithUnknown, theme);
+
+      expect(html).toContain('Title');
+      // Unknown component should be silently ignored (empty string)
+      expect(html).not.toContain('unknown-component-type');
     });
   });
 });
