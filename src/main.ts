@@ -1,44 +1,102 @@
 /**
  * Demo application entry point
  *
- * This demonstrates the Phase 1 MVP:
- * - Creating a simple slide with title and subtitle
- * - Applying a theme
- * - Rendering to the DOM
+ * This demonstrates the Phase 2 multi-slide navigation:
+ * - Creating a deck with multiple slides
+ * - Keyboard navigation between slides
+ * - Progress indicator
+ * - Theme application
  */
 
-import { SlideRenderer } from './lib/rendering/slide-renderer';
+import { DeckRenderer } from './lib/rendering/deck-renderer';
+import { ProgressIndicator } from './lib/ui/progress-indicator';
 import { exampleTheme } from './lib/theming/example-theme';
 import { titleLayout } from './lib/design-system/layouts/title';
 import { layoutRegistry } from './lib/design-system/layout-registry';
-import type { Slide } from './lib/types/slide';
+import type { Deck } from './lib/types/deck';
 
 // Register the title layout in the global registry
 layoutRegistry.registerLayout('title', titleLayout);
 
-// Create a sample slide
-const demoSlide: Slide = {
-  id: 'demo-slide-1',
-  layout: 'title',
-  content: {
-    title: 'Presentation Framework',
-    subtitle: 'Phase 1 MVP - Single Static Slide with Theme ✨',
+// Create a demo deck with 5 slides
+const demoDeck: Deck = {
+  metadata: {
+    title: 'Presentation Framework Demo',
+    author: 'Demo Author',
+    description: 'Phase 2 - Multi-slide navigation with keyboard controls',
+    date: new Date().toISOString().split('T')[0],
   },
-  notes: 'This is a demo of the presentation framework MVP',
+  theme: exampleTheme,
+  slides: [
+    {
+      id: 'slide-1',
+      layout: 'title',
+      content: {
+        title: 'Presentation Framework',
+        subtitle: 'Phase 2: Multi-Slide Navigation ✨',
+      },
+    },
+    {
+      id: 'slide-2',
+      layout: 'title',
+      content: {
+        title: 'Keyboard Navigation',
+        subtitle: 'Use Arrow Keys, Space, or Page Up/Down to navigate',
+      },
+    },
+    {
+      id: 'slide-3',
+      layout: 'title',
+      content: {
+        title: 'Features Implemented',
+        subtitle: 'DeckNavigator • NavigationController • DeckRenderer',
+      },
+    },
+    {
+      id: 'slide-4',
+      layout: 'title',
+      content: {
+        title: 'Progress Indicator',
+        subtitle: 'See the slide counter in the bottom-right corner',
+      },
+    },
+    {
+      id: 'slide-5',
+      layout: 'title',
+      content: {
+        title: 'Thank You!',
+        subtitle: 'Try pressing Home or End to jump to first/last slide',
+      },
+    },
+  ],
 };
 
-// Render the slide
-const renderer = new SlideRenderer();
-const html = renderer.render(demoSlide, exampleTheme);
-
-// Inject into the DOM
+// Get the app container
 const app = document.querySelector<HTMLDivElement>('#app');
+
 if (app) {
-  app.innerHTML = html;
-  console.log('✅ Slide rendered successfully!');
-  console.log('Theme:', exampleTheme.getName());
-  console.log('Layout:', demoSlide.layout);
-  console.log('Slide ID:', demoSlide.id);
+  // Create and render the deck
+  const renderer = new DeckRenderer(demoDeck, { container: app });
+  renderer.render();
+
+  // Create and render progress indicator
+  const progressIndicator = new ProgressIndicator(renderer.getNavigator(), {
+    style: 'text',
+    position: 'bottom-right',
+    container: app,
+  });
+  progressIndicator.render();
+
+  console.log('✅ Presentation rendered successfully!');
+  console.log('Deck:', demoDeck.metadata.title);
+  console.log('Theme:', demoDeck.theme.getName());
+  console.log('Total slides:', demoDeck.slides.length);
+  console.log('');
+  console.log('Navigation controls:');
+  console.log('  → / ↓ / Space / Page Down: Next slide');
+  console.log('  ← / ↑ / Page Up: Previous slide');
+  console.log('  Home: First slide');
+  console.log('  End: Last slide');
 } else {
   console.error('❌ Could not find #app element');
 }
