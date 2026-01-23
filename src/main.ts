@@ -1,8 +1,8 @@
 /**
  * Demo application entry point
  *
- * This demonstrates the Phase 3 core layouts:
- * - All 5 core layout types (title, section, content, two-column, code)
+ * This demonstrates the Phase 4 advanced layouts:
+ * - All 11 layout types (5 core + 6 advanced)
  * - Multi-slide navigation with keyboard controls
  * - Progress indicator
  * - Theme application
@@ -38,12 +38,12 @@ layoutRegistry.registerLayout('split-60-40', split6040Layout);
 layoutRegistry.registerLayout('quote', quoteLayout);
 layoutRegistry.registerLayout('comparison', comparisonLayout);
 
-// Create a demo deck showcasing all 5 core layouts
+// Create a demo deck showcasing all 11 layouts
 const demoDeck: Deck = {
   metadata: {
     title: 'Presentation Framework Demo',
     author: 'Demo Author',
-    description: 'Phase 3 - Core Layouts Showcase',
+    description: 'Phase 4 - Advanced Layouts Showcase',
     date: new Date().toISOString().split('T')[0],
   },
   theme: exampleTheme,
@@ -53,52 +53,84 @@ const demoDeck: Deck = {
       layout: 'title',
       content: {
         title: 'Presentation Framework',
-        subtitle: 'Phase 3: Core Layouts Showcase',
+        subtitle: 'Phase 4: Advanced Layouts Showcase',
       },
     },
     {
       id: 'slide-2',
       layout: 'section',
       content: {
-        heading: 'Layout Types',
+        heading: 'Advanced Layouts',
       },
     },
     {
       id: 'slide-3',
-      layout: 'content',
+      layout: 'image-left',
       content: {
-        title: 'Content Layout',
+        title: 'Image-Left Layout',
+        image: '[Image 40%]',
         content:
-          'This is the content layout with a title zone and a main content area. Perfect for standard slides with bullet points, paragraphs, or lists.',
+          'Content on the right (60%). Great for product demos with screenshots or diagrams with descriptions.',
       },
     },
     {
       id: 'slide-4',
-      layout: 'two-column',
+      layout: 'image-right',
       content: {
-        title: 'Two-Column Layout',
-        left: 'Left column content goes here. Great for comparisons and side-by-side presentations.',
-        right:
-          'Right column content goes here. Equal width columns using CSS Grid 1fr 1fr split.',
+        title: 'Image-Right Layout',
+        content:
+          'Content on the left (60%). Perfect for text-heavy content with supporting visuals on the side.',
+        image: '[Image 40%]',
       },
     },
     {
       id: 'slide-5',
-      layout: 'code',
+      layout: 'split-40-60',
       content: {
-        title: 'Code Layout Example',
-        code: 'function hello() {\n  return "Hello, World!";\n}\n\nconsole.log(hello());',
+        title: 'Split 40-60 Layout',
+        left: 'Left column (40%). Supporting points or summary.',
+        right:
+          'Right column (60%). Main content with emphasis. Asymmetric split creates visual hierarchy.',
       },
     },
     {
       id: 'slide-6',
+      layout: 'split-60-40',
+      content: {
+        title: 'Split 60-40 Layout',
+        left: 'Left column (60%). Main content with emphasis. Inverse of 40-60 layout.',
+        right: 'Right column (40%). Supporting content or sidebar.',
+      },
+    },
+    {
+      id: 'slide-7',
+      layout: 'quote',
+      content: {
+        quote:
+          'This is a large, impactful quote perfect for testimonials or key takeaways.',
+        attribution: '— Attribution or Source',
+      },
+    },
+    {
+      id: 'slide-8',
+      layout: 'comparison',
+      content: {
+        title: 'Comparison Layout',
+        'left-label': 'Before',
+        left: 'Old approach or original state. Perfect for vs. slides.',
+        'right-label': 'After',
+        right: 'New approach or improved state. Structured comparison.',
+      },
+    },
+    {
+      id: 'slide-9',
       layout: 'section',
       content: {
         heading: 'Navigation',
       },
     },
     {
-      id: 'slide-7',
+      id: 'slide-10',
       layout: 'content',
       content: {
         title: 'Keyboard Controls',
@@ -107,11 +139,11 @@ const demoDeck: Deck = {
       },
     },
     {
-      id: 'slide-8',
+      id: 'slide-11',
       layout: 'title',
       content: {
         title: 'Thank You!',
-        subtitle: 'All 5 core layouts are now implemented',
+        subtitle: 'All 11 layouts are now implemented (5 core + 6 advanced)',
       },
     },
   ],
