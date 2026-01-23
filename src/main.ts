@@ -18,6 +18,7 @@ import { twoColumnLayout } from './lib/design-system/layouts/two-column';
 import { codeLayout } from './lib/design-system/layouts/code';
 import { imageLeftLayout } from './lib/design-system/layouts/image-left';
 import { imageRightLayout } from './lib/design-system/layouts/image-right';
+import { split4060Layout } from './lib/design-system/layouts/split-40-60';
 import { layoutRegistry } from './lib/design-system/layout-registry';
 import type { Deck } from './lib/types/deck';
 
@@ -29,6 +30,7 @@ layoutRegistry.registerLayout('two-column', twoColumnLayout);
 layoutRegistry.registerLayout('code', codeLayout);
 layoutRegistry.registerLayout('image-left', imageLeftLayout);
 layoutRegistry.registerLayout('image-right', imageRightLayout);
+layoutRegistry.registerLayout('split-40-60', split4060Layout);
 
 // Create a demo deck showcasing all 5 core layouts
 const demoDeck: Deck = {
