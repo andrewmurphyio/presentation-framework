@@ -109,20 +109,16 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       font-family: var(--font-mono);
     }
 
-    /* DL logo icon */
+    /* DL logo icon - using actual logo image */
     .slide[data-layout="debugging-leadership-title"] .zone-logo::before {
-      content: 'DL';
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      content: '';
+      display: block;
       width: 2.5rem;
       height: 2.5rem;
-      background: linear-gradient(135deg, var(--color-primary) 0%, #9333EA 100%);
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      font-weight: 700;
-      color: white;
-      font-family: var(--font-mono);
+      background-image: url('/examples/themes/debugging-leadership/media/favicon.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
     /* Title line styling - monospace font */

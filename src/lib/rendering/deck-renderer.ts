@@ -112,6 +112,9 @@ export class DeckRenderer {
   private injectLayoutStyles(layout: LayoutDefinition): void {
     // Skip if no custom styles or already injected
     if (!layout.customStyles || this.injectedLayoutStyles.has(layout.name)) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:injectLayoutStyles:skipped',message:'Skipping style injection',data:{layoutName:layout.name,hasCustomStyles:!!layout.customStyles,alreadyInjected:this.injectedLayoutStyles.has(layout.name)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3'})}).catch(()=>{});
+      // #endregion
       return;
     }
 
@@ -125,6 +128,9 @@ export class DeckRenderer {
 
     // Mark as injected
     this.injectedLayoutStyles.add(layout.name);
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:injectLayoutStyles:injected',message:'Custom styles injected',data:{layoutName:layout.name,styleLength:layout.customStyles.length,styleElementId:styleEl.dataset.layout},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3'})}).catch(()=>{});
+    // #endregion
   }
 
   private renderSlides(): void {
@@ -157,6 +163,9 @@ export class DeckRenderer {
   }
 
   private applyLayoutStyles(element: HTMLElement, layout: LayoutDefinition): void {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:applyLayoutStyles',message:'Applying layout styles',data:{layoutName:layout.name,hasCustomStyles:!!layout.customStyles,customStylesLength:layout.customStyles?.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
+    // #endregion
     element.style.display = 'grid';
     if (layout.gridTemplateAreas) {
       element.style.gridTemplateAreas = layout.gridTemplateAreas;
@@ -167,6 +176,9 @@ export class DeckRenderer {
     element.style.height = '100%';
     element.style.padding = 'var(--spacing-12)';
     element.style.gap = 'var(--spacing-6)';
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:applyLayoutStyles:after',message:'Inline styles applied to slide',data:{inlinePadding:element.style.padding,inlineGap:element.style.gap,cssTextLength:element.style.cssText.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
+    // #endregion
   }
 
   private addZoneContent(
@@ -174,6 +186,9 @@ export class DeckRenderer {
     slide: Slide,
     layout: LayoutDefinition
   ): void {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:addZoneContent',message:'Adding zone content',data:{slideLayout:slide.layout,zoneCount:layout.zones.length,zoneNames:layout.zones.map(z=>z.name)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
+    // #endregion
     layout.zones.forEach((zone) => {
       const content = slide.content[zone.name];
       if (!content) return;
@@ -187,6 +202,9 @@ export class DeckRenderer {
       zoneDiv.style.justifyContent = 'center';
       zoneDiv.style.alignItems = 'center';
       zoneDiv.style.textAlign = 'center';
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:addZoneContent:zoneCreated',message:'Zone created with inline styles',data:{zoneName:zone.name,inlineAlignItems:zoneDiv.style.alignItems,inlineTextAlign:zoneDiv.style.textAlign,inlineJustifyContent:zoneDiv.style.justifyContent},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
+      // #endregion
 
       // Apply zone-specific styling
       if (zone.name === 'title') {
