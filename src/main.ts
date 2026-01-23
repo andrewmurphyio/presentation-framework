@@ -11,7 +11,9 @@
 
 import { DeckRenderer } from './lib/rendering/deck-renderer';
 import { ProgressIndicator } from './lib/ui/progress-indicator';
-import { exampleTheme } from './lib/theming/example-theme';
+// import { exampleTheme } from '@examples/themes/example';
+import { debuggingLeadershipTheme } from '@examples/themes/debugging-leadership';
+import { debuggingLeadershipTitleLayout } from '@examples/themes/debugging-leadership/layouts';
 import { titleLayout } from './lib/design-system/layouts/title';
 import { sectionLayout } from './lib/design-system/layouts/section';
 import { contentLayout } from './lib/design-system/layouts/content';
@@ -28,6 +30,7 @@ import type { Deck } from './lib/types/deck';
 
 // Register layouts in the global registry
 layoutRegistry.registerLayout('title', titleLayout);
+layoutRegistry.registerLayout('debugging-leadership-title', debuggingLeadershipTitleLayout);
 layoutRegistry.registerLayout('section', sectionLayout);
 layoutRegistry.registerLayout('content', contentLayout);
 layoutRegistry.registerLayout('two-column', twoColumnLayout);
@@ -47,18 +50,19 @@ const demoDeck: Deck = {
     description: 'Phase 5 - Debug Mode Showcase',
     date: new Date().toISOString().split('T')[0],
   },
-  theme: exampleTheme,
+  theme: debuggingLeadershipTheme,
   slides: [
     {
       id: 'slide-1',
-      layout: 'title',
+      layout: 'debugging-leadership-title',
       content: {
-        'header-left': '🔧 Debugging Leadership',
-        'header-right': 'Tech Conference 2026',
-        title: 'Presentation Framework',
-        subtitle: 'Phase 5: Debug Mode Showcase',
-        'footer-left': 'Presented by: Andrew Murphy',
-        'footer-right': 'debuggingleadership.com',
+        'logo': 'Debugging Leadership',
+        'title-line-1': '9 Management Habits',
+        'title-line-2': 'Quietly Burning Out',
+        'title-line-3': 'Your Best Engineers',
+        'presenter-label': 'Presented By :',
+        'presenter-name': 'Andrew Murphy',
+        'website': 'debuggingleadership.com',
       },
     },
     {

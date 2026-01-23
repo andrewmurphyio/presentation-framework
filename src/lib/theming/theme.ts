@@ -1,13 +1,18 @@
 import type { DesignTokens } from '../types/tokens';
-import type { Theme, CSSVariables } from '../types/theme';
 
 /**
- * Theme class provides token management and CSS variable generation
+ * CSS Variable mapping for design tokens
+ * Maps token paths to CSS custom property names
+ */
+export type CSSVariables = Record<string, string>;
+
+/**
+ * Theme provides token management and CSS variable generation
  *
  * Themes wrap DesignTokens and provide utilities for applying them
  * to slides via CSS custom properties.
  */
-export class ThemeClass implements Theme {
+export class Theme {
   readonly name: string;
   readonly tokens: DesignTokens;
 

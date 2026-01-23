@@ -18,10 +18,11 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@lib/*": ["src/lib/*"],
+      "@examples/*": ["examples/*"]
     }
   },
   "include": ["src/**/*"],

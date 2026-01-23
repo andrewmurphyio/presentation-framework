@@ -115,7 +115,9 @@ export class DebugOverlay {
         this.layoutPanel.update(debugInfo.layout);
       } else {
         this.layoutPanelElement = this.layoutPanel.render(debugInfo.layout);
-        this.container!.appendChild(this.layoutPanelElement);
+        if (this.container) {
+          this.container.appendChild(this.layoutPanelElement);
+        }
       }
 
       // Update or create zone boundaries
@@ -123,7 +125,9 @@ export class DebugOverlay {
         this.zoneBoundaries.update(debugInfo.layout.zones, slideElement);
       } else {
         this.zoneBoundariesElement = this.zoneBoundaries.render(debugInfo.layout.zones, slideElement);
-        this.container!.appendChild(this.zoneBoundariesElement);
+        if (this.container) {
+          this.container.appendChild(this.zoneBoundariesElement);
+        }
       }
 
       // Update or create token inspector
@@ -131,7 +135,9 @@ export class DebugOverlay {
         this.tokenInspector.update(debugInfo.theme);
       } else {
         this.tokenInspectorElement = this.tokenInspector.render(debugInfo.theme);
-        this.container!.appendChild(this.tokenInspectorElement);
+        if (this.container) {
+          this.container.appendChild(this.tokenInspectorElement);
+        }
       }
 
       // Update or create metadata panel
@@ -139,7 +145,9 @@ export class DebugOverlay {
         this.metadataPanel.update(debugInfo.slide, debugInfo.layout);
       } else {
         this.metadataPanelElement = this.metadataPanel.render(debugInfo.slide, debugInfo.layout);
-        this.container!.appendChild(this.metadataPanelElement);
+        if (this.container) {
+          this.container.appendChild(this.metadataPanelElement);
+        }
       }
     });
   }

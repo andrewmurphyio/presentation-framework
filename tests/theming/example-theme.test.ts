@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { exampleTheme } from '@/lib/theming/example-theme';
+import { exampleTheme } from '@examples/themes/example';
 import { defaultTokens } from '@/lib/design-system/default-tokens';
 
 describe('Example Theme', () => {

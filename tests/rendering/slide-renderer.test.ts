@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SlideRenderer } from '@/lib/rendering/slide-renderer';
-import { ThemeClass } from '@/lib/theming/theme-class';
+import { Theme } from "@lib/theming/theme";
 import { LayoutRegistry } from '@/lib/design-system/layout-registry';
 import { titleLayout } from '@/lib/design-system/layouts/title';
 import { defaultTokens } from '@/lib/design-system/default-tokens';
@@ -8,13 +8,13 @@ import type { Slide } from '@/lib/types/slide';
 
 describe('SlideRenderer', () => {
   let renderer: SlideRenderer;
-  let theme: ThemeClass;
+  let theme: Theme;
   let layoutReg: LayoutRegistry;
   let testSlide: Slide;
 
   beforeEach(() => {
     renderer = new SlideRenderer();
-    theme = new ThemeClass('test-theme', defaultTokens);
+    theme = new Theme('test-theme', defaultTokens);
     layoutReg = new LayoutRegistry();
     layoutReg.registerLayout('title', titleLayout);
 

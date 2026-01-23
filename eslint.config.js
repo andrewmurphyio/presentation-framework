@@ -7,7 +7,7 @@ import globals from 'globals';
 export default [
   // Ignore patterns
   {
-    ignores: ['dist/**', 'node_modules/**', '*.config.ts', '*.config.js'],
+    ignores: ['dist/**', 'node_modules/**', '*.config.ts', '*.config.js', 'examples/**'],
   },
 
   // Base config for source files

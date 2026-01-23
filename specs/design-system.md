@@ -45,6 +45,14 @@ Individual decks/talks can define their own custom layouts for unique presentati
 - Are only available within that specific deck
 - Support the same zone-based content flow as system layouts
 
+### Custom Layout Styling
+Layouts can include custom CSS styles through the `customStyles` property:
+- Styles are automatically scoped to the layout using `[data-layout="layout-name"]`
+- Applied when the layout is first used, avoiding duplication
+- Allows complete control over zone positioning, typography, and visual effects
+- Theme-specific layouts can use CSS variables defined by the theme
+- Styles are injected into the document head for optimal performance
+
 Each layout defines zones where content goes. Content flows into zones without manual positioning.
 
 ## Components

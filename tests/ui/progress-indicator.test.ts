@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ProgressIndicator } from '../../src/lib/ui/progress-indicator';
 import { DeckNavigator } from '../../src/lib/navigation/deck-navigator';
 import type { Deck } from '../../src/lib/types/deck';
-import { ThemeClass } from '../../src/lib/theming/theme-class';
+import { Theme } from "@lib/theming/theme";
 import { defaultTokens } from '../../src/lib/design-system/default-tokens';
 
 describe('ProgressIndicator', () => {
@@ -15,7 +15,7 @@ describe('ProgressIndicator', () => {
     container = document.createElement('div');
     document.body.appendChild(container);
 
-    const theme = new ThemeClass('test-theme', defaultTokens);
+    const theme = new Theme('test-theme', defaultTokens);
     mockDeck = {
       metadata: { title: 'Test', author: 'Test' },
       theme,

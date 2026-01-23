@@ -12,7 +12,6 @@ export type {
   BorderTokens,
   ShadowTokens,
   DesignTokens,
-  Theme,
   CSSVariables,
   LayoutZone,
   LayoutDefinition,
@@ -27,11 +26,21 @@ export { TokenRegistry } from './lib/design-system/token-registry';
 export { defaultTokens } from './lib/design-system/default-tokens';
 export { LayoutRegistry } from './lib/design-system/layout-registry';
 export { layoutRegistry } from './lib/design-system/layout-registry';
+// Layout exports
 export { titleLayout } from './lib/design-system/layouts/title';
+export { sectionLayout } from './lib/design-system/layouts/section';
+export { contentLayout } from './lib/design-system/layouts/content';
+export { twoColumnLayout } from './lib/design-system/layouts/two-column';
+export { codeLayout } from './lib/design-system/layouts/code';
+export { imageLeftLayout } from './lib/design-system/layouts/image-left';
+export { imageRightLayout } from './lib/design-system/layouts/image-right';
+export { split4060Layout } from './lib/design-system/layouts/split-40-60';
+export { split6040Layout } from './lib/design-system/layouts/split-60-40';
+export { quoteLayout } from './lib/design-system/layouts/quote';
+export { comparisonLayout } from './lib/design-system/layouts/comparison';
 
 // Theming
-export { ThemeClass } from './lib/theming/theme-class';
-export { exampleTheme } from './lib/theming/example-theme';
+export { Theme } from './lib/theming/theme';
 
 // Navigation
 export { DeckNavigator } from './lib/navigation/deck-navigator';

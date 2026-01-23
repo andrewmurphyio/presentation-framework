@@ -6,6 +6,18 @@
  */
 
 /**
+ * Source of a layout definition in the three-tier hierarchy
+ */
+export enum LayoutSource {
+  /** Built-in framework layouts */
+  SYSTEM = 'system',
+  /** Theme-provided layouts */
+  THEME = 'theme',
+  /** Deck-specific custom layouts */
+  DECK = 'deck',
+}
+
+/**
  * A zone is a named area within a layout where content can be placed
  */
 export interface LayoutZone {
@@ -40,4 +52,13 @@ export interface LayoutDefinition {
 
   /** CSS grid template rows */
   gridTemplateRows?: string;
+
+  /** Optional custom CSS styles for this layout */
+  customStyles?: string;
+
+  /** Source of this layout in the hierarchy */
+  source?: LayoutSource;
+
+  /** Priority for layout resolution (higher takes precedence) */
+  priority?: number;
 }

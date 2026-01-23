@@ -122,6 +122,9 @@ ${varsString}
     color: var(--color-muted);
     margin-top: var(--spacing-4);
   }
+
+  /* Custom layout styles */
+  ${layout.customStyles || ''}
 </style>`;
   }
 

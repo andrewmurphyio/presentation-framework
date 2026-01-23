@@ -1,6 +1,6 @@
-import { ThemeClass } from './theme-class';
-import { defaultTokens } from '../design-system/default-tokens';
-import type { DesignTokens } from '../types/tokens';
+import { Theme } from '@lib/theming/theme';
+import { defaultTokens } from '@lib/design-system/default-tokens';
+import type { DesignTokens } from '@lib/types/tokens';
 
 /**
  * Example theme demonstrating theme customization
@@ -26,4 +26,4 @@ const exampleTokens: DesignTokens = {
  * Example theme instance
  * Use this as a template for creating custom branded themes
  */
-export const exampleTheme = new ThemeClass('example-theme', exampleTokens);
+export const exampleTheme = new Theme('example-theme', exampleTokens);

@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { ThemeClass } from '@/lib/theming/theme-class';
+import { Theme } from "@lib/theming/theme";
 import { defaultTokens } from '@/lib/design-system/default-tokens';
 
-describe('ThemeClass', () => {
-  const testTheme = new ThemeClass('test-theme', defaultTokens);
+describe('Theme', () => {
+  const testTheme = new Theme('test-theme', defaultTokens);
 
   describe('getName', () => {
     it('should return the theme name', () => {

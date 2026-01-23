@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DeckRenderer } from '../../src/lib/rendering/deck-renderer';
-import { ThemeClass } from '../../src/lib/theming/theme-class';
+import { Theme } from "@lib/theming/theme";
 import { defaultTokens } from '../../src/lib/design-system/default-tokens';
 import { layoutRegistry } from '../../src/lib/design-system/layout-registry';
 import { titleLayout } from '../../src/lib/design-system/layouts/title';
@@ -20,7 +20,7 @@ describe('DeckRenderer', () => {
     document.body.appendChild(container);
 
     // Create a mock deck
-    const theme = new ThemeClass('test-theme', defaultTokens);
+    const theme = new Theme('test-theme', defaultTokens);
     mockDeck = {
       metadata: {
         title: 'Test Presentation',

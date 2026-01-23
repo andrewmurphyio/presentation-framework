@@ -25,6 +25,7 @@ export class DeckRenderer {
   private debugOverlay?: DebugOverlay;
   private debugKeyboard?: DebugKeyboardController;
   private debugCollector?: DebugDataCollector;
+  private injectedLayoutStyles = new Set<string>();
 
   constructor(
     private readonly deck: Deck,
@@ -108,6 +109,24 @@ export class DeckRenderer {
     });
   }
 
+  private injectLayoutStyles(layout: LayoutDefinition): void {
+    // Skip if no custom styles or already injected
+    if (!layout.customStyles || this.injectedLayoutStyles.has(layout.name)) {
+      return;
+    }
+
+    // Create style element
+    const styleEl = document.createElement('style');
+    styleEl.dataset.layout = layout.name;
+    styleEl.textContent = layout.customStyles;
+
+    // Inject into document head
+    document.head.appendChild(styleEl);
+
+    // Mark as injected
+    this.injectedLayoutStyles.add(layout.name);
+  }
+
   private renderSlides(): void {
     this.slideElements = this.deck.slides.map((slide, index) => {
       const slideElement = this.createSlideElement(slide, index);
@@ -124,6 +143,9 @@ export class DeckRenderer {
     slideDiv.dataset.slideId = slide.id;
     slideDiv.dataset.slideIndex = String(index);
     slideDiv.dataset.layout = slide.layout;
+
+    // Inject custom layout styles if present
+    this.injectLayoutStyles(layout);
 
     // Apply layout styles
     this.applyLayoutStyles(slideDiv, layout);

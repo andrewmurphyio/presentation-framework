@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { DebugDataCollector } from '@/lib/debug/debug-data-collector';
-import { ThemeClass } from '@/lib/theming/theme-class';
+import { Theme } from "@lib/theming/theme";
 import { defaultTokens } from '@/lib/design-system/default-tokens';
 import type { Slide } from '@/lib/types/slide';
 import type { LayoutDefinition } from '@/lib/types/layout';
@@ -29,7 +29,7 @@ describe('DebugDataCollector', () => {
     },
   };
 
-  const mockTheme = new ThemeClass('Test Theme', defaultTokens);
+  const mockTheme = new Theme('Test Theme', defaultTokens);
 
   describe('collectSlideDebugInfo', () => {
     it('should collect complete debug info for a slide', () => {
