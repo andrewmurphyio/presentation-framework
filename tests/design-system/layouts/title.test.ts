@@ -12,12 +12,16 @@ describe('Title Layout', () => {
     expect(titleLayout.description.length).toBeGreaterThan(0);
   });
 
-  it('should have title and subtitle zones', () => {
-    expect(titleLayout.zones).toHaveLength(2);
+  it('should have all required zones', () => {
+    expect(titleLayout.zones).toHaveLength(6);
 
     const zoneNames = titleLayout.zones.map((z) => z.name);
+    expect(zoneNames).toContain('header-left');
+    expect(zoneNames).toContain('header-right');
     expect(zoneNames).toContain('title');
     expect(zoneNames).toContain('subtitle');
+    expect(zoneNames).toContain('footer-left');
+    expect(zoneNames).toContain('footer-right');
   });
 
   it('should have title zone with correct grid area', () => {
@@ -34,13 +38,17 @@ describe('Title Layout', () => {
 
   it('should have CSS grid template areas defined', () => {
     expect(titleLayout.gridTemplateAreas).toBeDefined();
+    expect(titleLayout.gridTemplateAreas).toContain('header-left');
+    expect(titleLayout.gridTemplateAreas).toContain('header-right');
     expect(titleLayout.gridTemplateAreas).toContain('title');
     expect(titleLayout.gridTemplateAreas).toContain('subtitle');
+    expect(titleLayout.gridTemplateAreas).toContain('footer-left');
+    expect(titleLayout.gridTemplateAreas).toContain('footer-right');
   });
 
   it('should have CSS grid template columns', () => {
     expect(titleLayout.gridTemplateColumns).toBeDefined();
-    expect(titleLayout.gridTemplateColumns).toBe('1fr');
+    expect(titleLayout.gridTemplateColumns).toBe('auto 1fr auto');
   });
 
   it('should have CSS grid template rows for vertical centering', () => {

@@ -52,8 +52,12 @@ const demoDeck: Deck = {
       id: 'slide-1',
       layout: 'title',
       content: {
+        'header-left': '🔧 Debugging Leadership',
+        'header-right': 'Tech Conference 2024',
         title: 'Presentation Framework',
         subtitle: 'Phase 4: Advanced Layouts Showcase',
+        'footer-left': 'Presented by: Demo Author',
+        'footer-right': 'example.com',
       },
     },
     {

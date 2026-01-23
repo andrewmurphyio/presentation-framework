@@ -134,21 +134,24 @@ describe('SlideRenderer', () => {
       const html = renderer.render(testSlide, theme, layoutReg);
 
       expect(html).toContain('grid-template-areas:');
-      expect(html).toContain('"title"');
-      expect(html).toContain('"subtitle"');
+      expect(html).toContain('header');
+      expect(html).toContain('title');
+      expect(html).toContain('subtitle');
+      expect(html).toContain('footer-left');
+      expect(html).toContain('footer-right');
     });
 
     it('should apply grid template columns from layout', () => {
       const html = renderer.render(testSlide, theme, layoutReg);
 
-      expect(html).toContain('grid-template-columns: 1fr');
+      expect(html).toContain('grid-template-columns: auto 1fr auto');
     });
 
     it('should apply grid template rows from layout', () => {
       const html = renderer.render(testSlide, theme, layoutReg);
 
       expect(html).toContain('grid-template-rows:');
-      expect(html).toContain('1fr auto auto 1fr');
+      expect(html).toContain('auto 1fr auto auto 1fr auto');
     });
 
     it('should create CSS classes for each zone', () => {
