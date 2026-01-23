@@ -64,58 +64,6 @@ describe('MetadataPanel', () => {
       expect(element.textContent).toContain('ID: slide-1');
     });
 
-    it('should display layout name', () => {
-      const element = panel.render(mockSlideInfo, mockLayoutInfo);
-
-      expect(element.textContent).toContain('Layout: two-column');
-    });
-
-    it('should display zone population status', () => {
-      const element = panel.render(mockSlideInfo, mockLayoutInfo);
-
-      expect(element.textContent).toContain('Zones: 2 / 3 filled');
-    });
-
-    it('should display all zone names', () => {
-      const element = panel.render(mockSlideInfo, mockLayoutInfo);
-
-      expect(element.textContent).toContain('title');
-      expect(element.textContent).toContain('left');
-      expect(element.textContent).toContain('right');
-    });
-
-    it('should show populated zones with checkmark', () => {
-      const element = panel.render(mockSlideInfo, mockLayoutInfo);
-
-      expect(element.textContent).toContain('✓ title');
-      expect(element.textContent).toContain('✓ left');
-    });
-
-    it('should show unpopulated zones with circle', () => {
-      const element = panel.render(mockSlideInfo, mockLayoutInfo);
-
-      expect(element.textContent).toContain('○ right');
-    });
-
-    it('should display content length for populated zones', () => {
-      const element = panel.render(mockSlideInfo, mockLayoutInfo);
-
-      expect(element.textContent).toContain('(15 chars)');
-      expect(element.textContent).toContain('(100 chars)');
-    });
-
-    it('should not display content length for unpopulated zones', () => {
-      const element = panel.render(mockSlideInfo, mockLayoutInfo);
-
-      // Find the zone list element
-      const zoneItems = element.querySelectorAll('.pf-debug-panel-content > div:last-child > div');
-      const rightZoneItem = Array.from(zoneItems).find((item) =>
-        item.textContent?.includes('right')
-      );
-
-      expect(rightZoneItem).toBeDefined();
-      expect(rightZoneItem?.textContent).not.toContain('chars');
-    });
   });
 
   describe('Positioning', () => {
@@ -207,23 +155,6 @@ describe('MetadataPanel', () => {
       expect(element.textContent).toContain('ID: slide-3');
     });
 
-    it('should update zone population on layout change', () => {
-      const element = panel.render(mockSlideInfo, mockLayoutInfo);
-      container.appendChild(element);
-
-      const newLayoutInfo: DebugLayoutInfo = {
-        ...mockLayoutInfo,
-        zones: [
-          { name: 'title', gridArea: 'title', populated: true, contentLength: 15 },
-          { name: 'left', gridArea: 'left', populated: true, contentLength: 100 },
-          { name: 'right', gridArea: 'right', populated: true, contentLength: 50 },
-        ],
-      };
-
-      panel.update(mockSlideInfo, newLayoutInfo);
-
-      expect(element.textContent).toContain('Zones: 3 / 3 filled');
-    });
 
     it('should handle update when not rendered', () => {
       expect(() => panel.update(mockSlideInfo, mockLayoutInfo)).not.toThrow();
@@ -295,46 +226,6 @@ describe('MetadataPanel', () => {
   });
 
   describe('Edge Cases', () => {
-    it('should handle layout with no zones', () => {
-      const emptyLayout: DebugLayoutInfo = {
-        ...mockLayoutInfo,
-        zones: [],
-      };
-
-      const element = panel.render(mockSlideInfo, emptyLayout);
-
-      expect(element.textContent).toContain('Zones: 0 / 0 filled');
-    });
-
-    it('should handle layout with all zones populated', () => {
-      const fullLayout: DebugLayoutInfo = {
-        ...mockLayoutInfo,
-        zones: [
-          { name: 'title', gridArea: 'title', populated: true, contentLength: 15 },
-          { name: 'left', gridArea: 'left', populated: true, contentLength: 100 },
-          { name: 'right', gridArea: 'right', populated: true, contentLength: 50 },
-        ],
-      };
-
-      const element = panel.render(mockSlideInfo, fullLayout);
-
-      expect(element.textContent).toContain('Zones: 3 / 3 filled');
-    });
-
-    it('should handle layout with no zones populated', () => {
-      const emptyContent: DebugLayoutInfo = {
-        ...mockLayoutInfo,
-        zones: [
-          { name: 'title', gridArea: 'title', populated: false },
-          { name: 'left', gridArea: 'left', populated: false },
-          { name: 'right', gridArea: 'right', populated: false },
-        ],
-      };
-
-      const element = panel.render(mockSlideInfo, emptyContent);
-
-      expect(element.textContent).toContain('Zones: 0 / 3 filled');
-    });
 
     it('should handle first slide', () => {
       const firstSlide: DebugSlideInfo = {
@@ -359,19 +250,6 @@ describe('MetadataPanel', () => {
       expect(element.textContent).toContain('Slide: 10 of 10');
     });
 
-    it('should handle zone without content length', () => {
-      const layoutWithNoLength: DebugLayoutInfo = {
-        ...mockLayoutInfo,
-        zones: [
-          { name: 'title', gridArea: 'title', populated: true },
-        ],
-      };
-
-      const element = panel.render(mockSlideInfo, layoutWithNoLength);
-
-      expect(element.textContent).toContain('✓ title');
-      // Should not crash when contentLength is undefined
-    });
 
     it('should handle long slide IDs', () => {
       const longIdSlide: DebugSlideInfo = {

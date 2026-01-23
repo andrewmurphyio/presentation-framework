@@ -43,6 +43,13 @@ describe('DebugOverlay', () => {
     debugMode = new DebugMode({}, false);
     parentElement = document.createElement('div');
     document.body.appendChild(parentElement);
+
+    // Create a mock slide element for update() to work
+    const slideElement = document.createElement('div');
+    slideElement.className = 'slide';
+    slideElement.style.display = 'grid';
+    parentElement.appendChild(slideElement);
+
     overlay = new DebugOverlay(debugMode, parentElement);
   });
 
@@ -60,7 +67,7 @@ describe('DebugOverlay', () => {
       overlay.mount();
 
       expect(overlay.isMounted()).toBe(true);
-      expect(parentElement.children.length).toBe(1);
+      expect(parentElement.children.length).toBe(2); // slide + overlay
     });
 
     it('should unmount from parent element', () => {
@@ -68,14 +75,14 @@ describe('DebugOverlay', () => {
       overlay.unmount();
 
       expect(overlay.isMounted()).toBe(false);
-      expect(parentElement.children.length).toBe(0);
+      expect(parentElement.children.length).toBe(1); // just the slide element remains
     });
 
     it('should not mount twice', () => {
       overlay.mount();
       overlay.mount();
 
-      expect(parentElement.children.length).toBe(1);
+      expect(parentElement.children.length).toBe(2); // slide + overlay (not duplicated)
     });
 
     it('should handle unmount when not mounted', () => {
@@ -87,7 +94,7 @@ describe('DebugOverlay', () => {
       overlay.destroy();
 
       expect(overlay.isMounted()).toBe(false);
-      expect(parentElement.children.length).toBe(0);
+      expect(parentElement.children.length).toBe(1); // slide element remains
     });
   });
 
@@ -146,25 +153,35 @@ describe('DebugOverlay', () => {
   });
 
   describe('Debug info management', () => {
-    it('should update with debug info', () => {
+    it('should update with debug info when enabled', () => {
+      debugMode.enable();
       overlay.mount();
       overlay.update(mockDebugInfo);
 
       const container = overlay.getContainer();
-      const stored = container?.getAttribute('data-debug-info');
+      // Check that panels were created
+      const panels = container?.querySelectorAll('.pf-debug-panel');
+      expect(panels?.length).toBeGreaterThan(0);
+    });
 
-      expect(stored).toBeDefined();
-      const parsed = JSON.parse(stored!);
-      expect(parsed.slide.id).toBe('test-slide');
+    it('should not update when debug mode is disabled', () => {
+      overlay.mount();
+      overlay.update(mockDebugInfo);
+
+      const container = overlay.getContainer();
+      const panels = container?.querySelectorAll('.pf-debug-panel');
+      expect(panels?.length).toBe(0);
     });
 
     it('should clear debug info', () => {
+      debugMode.enable();
       overlay.mount();
       overlay.update(mockDebugInfo);
       overlay.clear();
 
       const container = overlay.getContainer();
-      expect(container?.getAttribute('data-debug-info')).toBeNull();
+      const panels = container?.querySelectorAll('.pf-debug-panel');
+      expect(panels?.length).toBe(0);
     });
 
     it('should handle update when not mounted', () => {

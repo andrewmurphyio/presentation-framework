@@ -202,6 +202,13 @@ export class DeckRenderer {
     this.debugOverlay = new DebugOverlay(this.debugMode, this.container);
     this.debugKeyboard = new DebugKeyboardController(this.debugMode);
     this.debugCollector = new DebugDataCollector();
+
+    // Listen for debug mode state changes to update panels
+    this.debugMode.addEventListener(() => {
+      if (this.debugMode?.isEnabled()) {
+        this.updateDebugData();
+      }
+    });
   }
 
   private updateDebugData(): void {

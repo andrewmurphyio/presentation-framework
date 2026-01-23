@@ -176,7 +176,7 @@ export class MetadataPanel {
    */
   private createContent(
     slideInfo: DebugSlideInfo,
-    layoutInfo: DebugLayoutInfo
+    _layoutInfo: DebugLayoutInfo
   ): HTMLElement {
     const content = document.createElement('div');
     content.className = 'pf-debug-panel-content';
@@ -190,50 +190,10 @@ export class MetadataPanel {
 
     // Slide ID
     const slideId = document.createElement('div');
-    slideId.style.marginBottom = '8px';
     slideId.style.fontSize = '11px';
     slideId.style.color = '#aaa';
     slideId.innerHTML = `<strong>ID:</strong> ${slideInfo.id}`;
     content.appendChild(slideId);
-
-    // Layout name
-    const layoutName = document.createElement('div');
-    layoutName.style.marginBottom = '8px';
-    layoutName.innerHTML = `<strong>Layout:</strong> ${layoutInfo.name}`;
-    content.appendChild(layoutName);
-
-    // Zone population status
-    const populatedZones = layoutInfo.zones.filter((z) => z.populated).length;
-    const totalZones = layoutInfo.zones.length;
-
-    const zoneStatus = document.createElement('div');
-    zoneStatus.style.marginBottom = '4px';
-    zoneStatus.innerHTML = `<strong>Zones:</strong> ${populatedZones} / ${totalZones} filled`;
-    content.appendChild(zoneStatus);
-
-    // Zone breakdown
-    if (layoutInfo.zones.length > 0) {
-      const zoneList = document.createElement('div');
-      zoneList.style.marginTop = '4px';
-      zoneList.style.paddingLeft = '8px';
-      zoneList.style.fontSize = '11px';
-
-      layoutInfo.zones.forEach((zone) => {
-        const zoneItem = document.createElement('div');
-        zoneItem.style.marginBottom = '2px';
-        zoneItem.style.color = zone.populated ? '#50fa7b' : '#6272a4';
-
-        const status = zone.populated ? '✓' : '○';
-        const contentInfo = zone.populated && zone.contentLength
-          ? ` (${zone.contentLength} chars)`
-          : '';
-
-        zoneItem.textContent = `${status} ${zone.name}${contentInfo}`;
-        zoneList.appendChild(zoneItem);
-      });
-
-      content.appendChild(zoneList);
-    }
 
     return content;
   }
