@@ -1,9 +1,9 @@
 /**
  * Demo application entry point
  *
- * This demonstrates the Phase 2 multi-slide navigation:
- * - Creating a deck with multiple slides
- * - Keyboard navigation between slides
+ * This demonstrates the Phase 3 core layouts:
+ * - All 5 core layout types (title, section, content, two-column, code)
+ * - Multi-slide navigation with keyboard controls
  * - Progress indicator
  * - Theme application
  */
@@ -26,12 +26,12 @@ layoutRegistry.registerLayout('content', contentLayout);
 layoutRegistry.registerLayout('two-column', twoColumnLayout);
 layoutRegistry.registerLayout('code', codeLayout);
 
-// Create a demo deck with 5 slides
+// Create a demo deck showcasing all 5 core layouts
 const demoDeck: Deck = {
   metadata: {
     title: 'Presentation Framework Demo',
     author: 'Demo Author',
-    description: 'Phase 2 - Multi-slide navigation with keyboard controls',
+    description: 'Phase 3 - Core Layouts Showcase',
     date: new Date().toISOString().split('T')[0],
   },
   theme: exampleTheme,
@@ -41,39 +41,65 @@ const demoDeck: Deck = {
       layout: 'title',
       content: {
         title: 'Presentation Framework',
-        subtitle: 'Phase 2: Multi-Slide Navigation ✨',
+        subtitle: 'Phase 3: Core Layouts Showcase',
       },
     },
     {
       id: 'slide-2',
-      layout: 'title',
+      layout: 'section',
       content: {
-        title: 'Keyboard Navigation',
-        subtitle: 'Use Arrow Keys, Space, or Page Up/Down to navigate',
+        heading: 'Layout Types',
       },
     },
     {
       id: 'slide-3',
-      layout: 'title',
+      layout: 'content',
       content: {
-        title: 'Features Implemented',
-        subtitle: 'DeckNavigator • NavigationController • DeckRenderer',
+        title: 'Content Layout',
+        content:
+          'This is the content layout with a title zone and a main content area. Perfect for standard slides with bullet points, paragraphs, or lists.',
       },
     },
     {
       id: 'slide-4',
-      layout: 'title',
+      layout: 'two-column',
       content: {
-        title: 'Progress Indicator',
-        subtitle: 'See the slide counter in the bottom-right corner',
+        title: 'Two-Column Layout',
+        left: 'Left column content goes here. Great for comparisons and side-by-side presentations.',
+        right:
+          'Right column content goes here. Equal width columns using CSS Grid 1fr 1fr split.',
       },
     },
     {
       id: 'slide-5',
+      layout: 'code',
+      content: {
+        title: 'Code Layout Example',
+        code: 'function hello() {\n  return "Hello, World!";\n}\n\nconsole.log(hello());',
+      },
+    },
+    {
+      id: 'slide-6',
+      layout: 'section',
+      content: {
+        heading: 'Navigation',
+      },
+    },
+    {
+      id: 'slide-7',
+      layout: 'content',
+      content: {
+        title: 'Keyboard Controls',
+        content:
+          'Use Arrow Keys, Space, or Page Up/Down to navigate. Press Home to jump to first slide, End to jump to last slide.',
+      },
+    },
+    {
+      id: 'slide-8',
       layout: 'title',
       content: {
         title: 'Thank You!',
-        subtitle: 'Try pressing Home or End to jump to first/last slide',
+        subtitle: 'All 5 core layouts are now implemented',
       },
     },
   ],
