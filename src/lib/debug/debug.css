@@ -1,0 +1,137 @@
+/**
+ * Debug Mode Styles
+ *
+ * Note: Most debug styles are applied inline via TypeScript for dynamic positioning
+ * and configuration. This file contains only global debug-related styles.
+ */
+
+/* Ensure debug overlay doesn't interfere with presentation */
+.pf-debug-overlay {
+  /* Applied via TypeScript:
+   * - position: fixed
+   * - top/left/right/bottom: 0
+   * - z-index: 9999
+   * - pointer-events: none
+   * - display: none/block (based on debug mode state)
+   */
+}
+
+/* Debug panels inherit pointer events */
+.pf-debug-panel {
+  /* Applied via TypeScript:
+   * - position: absolute
+   * - background: rgba(0, 0, 0, 0.85)
+   * - color: #fff
+   * - font-family: Monaco, Courier New, monospace
+   * - font-size: 12px
+   * - padding: 12px
+   * - border-radius: 4px
+   * - pointer-events: auto
+   * - z-index: 10000
+   * - Positioning based on configuration (top-left, top-right, etc.)
+   */
+}
+
+/* Debug panel headers */
+.pf-debug-panel-header {
+  /* Applied via TypeScript:
+   * - font-weight: bold
+   * - margin-bottom: 8px
+   * - cursor: pointer
+   */
+}
+
+/* Debug panel content */
+.pf-debug-panel-content {
+  /* Applied via TypeScript:
+   * - display: block/none (based on collapsed state)
+   */
+}
+
+/* Zone boundaries */
+.pf-debug-zone-boundaries {
+  /* Applied via TypeScript:
+   * - position: absolute
+   * - top/left: 0
+   * - width/height: 100%
+   * - pointer-events: none
+   * - z-index: 9998
+   */
+}
+
+.pf-debug-zone-boundary {
+  /* Applied via TypeScript:
+   * - position: absolute
+   * - border: 2px dashed {color}
+   * - pointer-events: none
+   * - Dynamic positioning based on zone element
+   */
+}
+
+.pf-debug-zone-label {
+  /* Applied via TypeScript:
+   * - position: absolute
+   * - top/left: 0
+   * - background: {zone color}
+   * - color: #fff
+   * - padding: 2px 6px
+   * - font-size: 10px
+   * - font-family: Monaco, Courier New, monospace
+   * - font-weight: bold
+   * - border-bottom-right-radius: 3px
+   * - pointer-events: none
+   */
+}
+
+/* Token inspector sections */
+.pf-debug-token-section {
+  /* Applied via TypeScript:
+   * - margin-top: 12px
+   */
+}
+
+.pf-debug-section-header {
+  /* Applied via TypeScript:
+   * - font-weight: bold
+   * - margin-bottom: 4px
+   * - cursor: pointer
+   * - user-select: none
+   */
+}
+
+.pf-debug-token-list {
+  /* Applied via TypeScript:
+   * - display: block/none (based on section collapsed state)
+   * - padding-left: 8px
+   */
+}
+
+.pf-debug-token-item {
+  /* Applied via TypeScript:
+   * - margin-bottom: 4px
+   * - padding: 4px
+   * - border-radius: 2px
+   * - font-size: 11px
+   * - Optional override styles for overridden tokens
+   */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pf-debug-panel {
+    max-width: 90vw !important;
+    font-size: 11px !important;
+  }
+
+  .pf-debug-zone-label {
+    font-size: 9px !important;
+    padding: 1px 4px !important;
+  }
+}
+
+@media (max-height: 600px) {
+  .pf-debug-panel {
+    max-height: 400px !important;
+    font-size: 10px !important;
+  }
+}
