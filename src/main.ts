@@ -163,7 +163,7 @@ const app = document.querySelector<HTMLDivElement>('#app');
 
 if (app) {
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'main.ts:init',message:'Initializing deck renderer',data:{firstSlideLayout:demoDeck.slides[0].layout,firstSlideZones:Object.keys(demoDeck.slides[0].content)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H4'})}).catch(()=>{});
+  fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'main.ts:init',message:'Initializing deck renderer',data:{firstSlideLayout:demoDeck.slides[0]?.layout,firstSlideZones:demoDeck.slides[0] ? Object.keys(demoDeck.slides[0].content) : []},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H4'})}).catch(()=>{});
   // #endregion
   // Create and render the deck with debug mode enabled
   const renderer = new DeckRenderer(demoDeck, {

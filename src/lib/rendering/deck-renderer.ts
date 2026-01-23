@@ -2,6 +2,7 @@ import type { Deck } from '../types/deck';
 import { DeckNavigator } from '../navigation/deck-navigator';
 import { NavigationController } from '../navigation/navigation-controller';
 import { layoutRegistry } from '../design-system/layout-registry';
+import { LayoutResolver } from '../design-system/layout-resolver';
 import type { LayoutDefinition } from '../types/layout';
 import type { Slide } from '../types/slide';
 import { DebugMode } from '../debug/debug-mode';
@@ -26,6 +27,7 @@ export class DeckRenderer {
   private debugKeyboard?: DebugKeyboardController;
   private debugCollector?: DebugDataCollector;
   private injectedLayoutStyles = new Set<string>();
+  private layoutResolver: LayoutResolver;
 
   constructor(
     private readonly deck: Deck,
@@ -34,6 +36,14 @@ export class DeckRenderer {
     this.container = options.container || this.createDefaultContainer();
     this.navigator = new DeckNavigator(deck);
     this.controller = new NavigationController(this.navigator);
+
+    // Initialize layout resolver
+    this.layoutResolver = new LayoutResolver(layoutRegistry);
+
+    // Register deck custom layouts if present
+    if (this.deck.customLayouts) {
+      layoutRegistry.registerDeckLayouts(this.deck.customLayouts);
+    }
 
     // Initialize debug mode if requested
     if (options.debug) {
@@ -82,6 +92,23 @@ export class DeckRenderer {
     if (this.debugOverlay) {
       this.debugOverlay.destroy();
     }
+
+    // Clean up deck layouts from registry
+    if (this.deck.customLayouts) {
+      layoutRegistry.clearDeckLayouts();
+    }
+
+    // Clean up injected style elements
+    this.injectedLayoutStyles.forEach(layoutName => {
+      const styleEl = document.querySelector(`style[data-layout="${layoutName}"]`);
+      if (styleEl) {
+        styleEl.remove();
+      }
+    });
+    this.injectedLayoutStyles.clear();
+
+    // Clear layout resolver cache
+    this.layoutResolver.clearCache();
 
     this.container.innerHTML = '';
   }
@@ -142,7 +169,13 @@ export class DeckRenderer {
   }
 
   private createSlideElement(slide: Slide, index: number): HTMLElement {
-    const layout = layoutRegistry.getLayout(slide.layout);
+    // Resolve layout through three-tier hierarchy
+    // Theme layouts will be supported when Theme class is updated
+    const layout = this.layoutResolver.resolveLayout(
+      slide.layout,
+      this.deck.customLayouts,
+      undefined // Theme layouts not yet implemented
+    );
     const slideDiv = document.createElement('div');
 
     slideDiv.className = 'slide';
@@ -174,10 +207,13 @@ export class DeckRenderer {
     element.style.gridTemplateRows = layout.gridTemplateRows || 'auto';
     element.style.width = '100%';
     element.style.height = '100%';
-    element.style.padding = 'var(--spacing-12)';
-    element.style.gap = 'var(--spacing-6)';
+    // Only apply default padding/gap if layout doesn't have custom styles
+    if (!layout.customStyles) {
+      element.style.padding = 'var(--spacing-12)';
+      element.style.gap = 'var(--spacing-6)';
+    }
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:applyLayoutStyles:after',message:'Inline styles applied to slide',data:{inlinePadding:element.style.padding,inlineGap:element.style.gap,cssTextLength:element.style.cssText.length},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:applyLayoutStyles:after',message:'Inline styles applied to slide',data:{inlinePadding:element.style.padding,inlineGap:element.style.gap,cssTextLength:element.style.cssText.length,skippedDefaults:!!layout.customStyles},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
     // #endregion
   }
 
@@ -187,7 +223,7 @@ export class DeckRenderer {
     layout: LayoutDefinition
   ): void {
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:addZoneContent',message:'Adding zone content',data:{slideLayout:slide.layout,zoneCount:layout.zones.length,zoneNames:layout.zones.map(z=>z.name)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:addZoneContent',message:'Adding zone content',data:{slideLayout:slide.layout,zoneCount:layout.zones.length,zoneNames:layout.zones.map(z=>z.name),hasCustomStyles:!!layout.customStyles},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
     // #endregion
     layout.zones.forEach((zone) => {
       const content = slide.content[zone.name];
@@ -197,25 +233,31 @@ export class DeckRenderer {
       zoneDiv.className = `slide-zone zone-${zone.name}`;
       zoneDiv.setAttribute('data-zone', zone.name);
       zoneDiv.style.gridArea = zone.gridArea || zone.name;
-      zoneDiv.style.display = 'flex';
-      zoneDiv.style.flexDirection = 'column';
-      zoneDiv.style.justifyContent = 'center';
-      zoneDiv.style.alignItems = 'center';
-      zoneDiv.style.textAlign = 'center';
+      
+      // Only apply default inline styles if layout doesn't have custom styles
+      if (!layout.customStyles) {
+        zoneDiv.style.display = 'flex';
+        zoneDiv.style.flexDirection = 'column';
+        zoneDiv.style.justifyContent = 'center';
+        zoneDiv.style.alignItems = 'center';
+        zoneDiv.style.textAlign = 'center';
+      }
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:addZoneContent:zoneCreated',message:'Zone created with inline styles',data:{zoneName:zone.name,inlineAlignItems:zoneDiv.style.alignItems,inlineTextAlign:zoneDiv.style.textAlign,inlineJustifyContent:zoneDiv.style.justifyContent},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/59bfdcb5-30a9-4157-bfb6-55311cc6ccd0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'deck-renderer.ts:addZoneContent:zoneCreated',message:'Zone created',data:{zoneName:zone.name,inlineAlignItems:zoneDiv.style.alignItems||'(none)',inlineTextAlign:zoneDiv.style.textAlign||'(none)',skippedDefaults:!!layout.customStyles},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
       // #endregion
 
-      // Apply zone-specific styling
-      if (zone.name === 'title') {
-        zoneDiv.style.fontSize = 'var(--font-size-4xl)';
-        zoneDiv.style.fontWeight = 'var(--font-weight-bold)';
-        zoneDiv.style.color = 'var(--color-primary)';
-      } else if (zone.name === 'subtitle') {
-        zoneDiv.style.fontSize = 'var(--font-size-xl)';
-        zoneDiv.style.fontWeight = 'var(--font-weight-medium)';
-        zoneDiv.style.color = 'var(--color-muted)';
-        zoneDiv.style.marginTop = 'var(--spacing-4)';
+      // Apply zone-specific styling only for layouts without custom styles
+      if (!layout.customStyles) {
+        if (zone.name === 'title') {
+          zoneDiv.style.fontSize = 'var(--font-size-4xl)';
+          zoneDiv.style.fontWeight = 'var(--font-weight-bold)';
+          zoneDiv.style.color = 'var(--color-primary)';
+        } else if (zone.name === 'subtitle') {
+          zoneDiv.style.fontSize = 'var(--font-size-xl)';
+          zoneDiv.style.fontWeight = 'var(--font-weight-medium)';
+          zoneDiv.style.color = 'var(--color-muted)';
+          zoneDiv.style.marginTop = 'var(--spacing-4)';
+        }
       }
 
       zoneDiv.textContent = content;
@@ -259,7 +301,13 @@ export class DeckRenderer {
     const slide = this.deck.slides[currentIndex];
     if (!slide) return;
 
-    const layout = layoutRegistry.getLayout(slide.layout);
+    // Resolve layout through three-tier hierarchy
+    // Theme layouts will be supported when Theme class is updated
+    const layout = this.layoutResolver.resolveLayout(
+      slide.layout,
+      this.deck.customLayouts,
+      undefined // Theme layouts not yet implemented
+    );
 
     const debugInfo = this.debugCollector.collectSlideDebugInfo(
       slide,
