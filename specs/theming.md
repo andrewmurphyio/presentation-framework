@@ -14,8 +14,9 @@ A theme provides concrete values for the design system tokens:
 - Typography choices (which fonts to use)
 - Logo / brand assets
 - Any brand-specific component styling overrides
+- Optional custom layouts (theme-specific slide layouts)
 
-Themes implement the token interface defined in the design system.
+Themes implement the token interface defined in the design system and can extend the available layouts.
 
 ## Theme Structure
 

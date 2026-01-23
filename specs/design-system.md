@@ -21,8 +21,10 @@ Tokens should be defined in a single source file and referenced throughout.
 
 ## Layouts
 
-Pre-defined slide layouts that handle positioning automatically:
+Pre-defined slide layouts that handle positioning automatically. Layouts can be defined at multiple levels:
 
+### System Layouts (Built-in)
+Core layouts provided by the framework:
 - Title slide
 - Section divider
 - Single content (centered)
@@ -32,6 +34,16 @@ Pre-defined slide layouts that handle positioning automatically:
 - Code slide
 - Quote slide
 - Comparison (side-by-side)
+
+### Theme Layouts
+Themes can provide additional layouts or override system layouts with brand-specific variations.
+
+### Deck Layouts (Custom)
+Individual decks/talks can define their own custom layouts for unique presentation needs. These layouts:
+- Live alongside the deck source files
+- Can extend or compose existing layouts
+- Are only available within that specific deck
+- Support the same zone-based content flow as system layouts
 
 Each layout defines zones where content goes. Content flows into zones without manual positioning.
 

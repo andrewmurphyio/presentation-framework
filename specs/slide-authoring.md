@@ -32,8 +32,19 @@ A talk/presentation is composed of:
 
 - **Metadata**: Talk-level information (see talk-metadata.md)
 - **Theme reference**: Which theme to apply
+- **Custom Layouts**: Optional deck-specific layout definitions
 - **Slides**: Ordered list of slides
 - **Sections**: Optional grouping of slides into named sections
+
+## Layout Resolution
+
+When a slide references a layout by name, the system resolves it in this order:
+
+1. **Deck layouts**: Check for custom layouts defined in the current deck
+2. **Theme layouts**: Check for layouts provided by the active theme
+3. **System layouts**: Fall back to built-in framework layouts
+
+This allows decks to override theme/system layouts or create entirely new ones for specific needs.
 
 ## File Organization
 
@@ -43,7 +54,7 @@ Options to consider:
 - Directory per talk (metadata + individual slide files)
 - Hybrid (metadata separate, slides in one or more files)
 
-Should support splitting large talks across files for manageability.
+Should support splitting large talks across files for manageability. Custom layouts would be stored alongside the talk files.
 
 ## Acceptance Criteria
 
