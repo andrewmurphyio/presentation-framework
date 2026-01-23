@@ -1,11 +1,12 @@
 /**
  * Demo application entry point
  *
- * This demonstrates the Phase 4 advanced layouts:
+ * This demonstrates Phase 5 - Debug Mode:
  * - All 11 layout types (5 core + 6 advanced)
  * - Multi-slide navigation with keyboard controls
  * - Progress indicator
  * - Theme application
+ * - Debug mode with layout info, zone boundaries, and token inspector
  */
 
 import { DeckRenderer } from './lib/rendering/deck-renderer';
@@ -43,7 +44,7 @@ const demoDeck: Deck = {
   metadata: {
     title: 'Presentation Framework Demo',
     author: 'Demo Author',
-    description: 'Phase 4 - Advanced Layouts Showcase',
+    description: 'Phase 5 - Debug Mode Showcase',
     date: new Date().toISOString().split('T')[0],
   },
   theme: exampleTheme,
@@ -55,7 +56,7 @@ const demoDeck: Deck = {
         'header-left': '🔧 Debugging Leadership',
         'header-right': 'Tech Conference 2026',
         title: 'Presentation Framework',
-        subtitle: 'Phase 4: Advanced Layouts Showcase',
+        subtitle: 'Phase 5: Debug Mode Showcase',
         'footer-left': 'Presented by: Andrew Murphy',
         'footer-right': 'debuggingleadership.com',
       },
@@ -139,7 +140,7 @@ const demoDeck: Deck = {
       content: {
         title: 'Keyboard Controls',
         content:
-          'Use Arrow Keys, Space, or Page Up/Down to navigate. Press Home to jump to first slide, End to jump to last slide.',
+          'Navigation: Arrow Keys, Space, or Page Up/Down. Press Home to jump to first slide, End to jump to last slide. Debug: Press D to toggle debug mode.',
       },
     },
     {
@@ -157,8 +158,18 @@ const demoDeck: Deck = {
 const app = document.querySelector<HTMLDivElement>('#app');
 
 if (app) {
-  // Create and render the deck
-  const renderer = new DeckRenderer(demoDeck, { container: app });
+  // Create and render the deck with debug mode enabled
+  const renderer = new DeckRenderer(demoDeck, {
+    container: app,
+    debug: {
+      showLayout: true,
+      showTokens: true,
+      showZones: true,
+      showMetadata: true,
+      panelPosition: 'top-left',
+      persistState: true,
+    },
+  });
   renderer.render();
 
   // Create and render progress indicator
@@ -179,6 +190,12 @@ if (app) {
   console.log('  ← / ↑ / Page Up: Previous slide');
   console.log('  Home: First slide');
   console.log('  End: Last slide');
+  console.log('');
+  console.log('Debug mode controls:');
+  console.log('  D: Toggle debug mode on/off');
+  console.log('  Shift+D: Toggle specific panels (future use)');
+  console.log('  Alt+Z: Toggle zone boundaries only');
+  console.log('  Alt+T: Toggle token inspector only');
 } else {
   console.error('❌ Could not find #app element');
 }
