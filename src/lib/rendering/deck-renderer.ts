@@ -241,7 +241,8 @@ export class DeckRenderer {
         }
       }
 
-      zoneDiv.textContent = content;
+      // Support HTML content (as per SlideContent type definition)
+      zoneDiv.innerHTML = content;
       slideElement.appendChild(zoneDiv);
     });
   }

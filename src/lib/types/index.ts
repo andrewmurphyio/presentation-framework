@@ -31,3 +31,16 @@ export type {
   DebugTransitionInfo,
   DebugInfo,
 } from './debug';
+
+export type {
+  Component,
+  CodeBlock,
+  List,
+  ListVariant,
+  ListItem,
+  Callout,
+  CalloutType,
+  Image,
+  ImageFitMode,
+  PresentationComponent,
+} from './component';

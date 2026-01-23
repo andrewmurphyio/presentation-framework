@@ -1,4 +1,5 @@
 import type { LayoutDefinition } from '../../../../src/lib/types/layout';
+import { debuggingLeadershipBaseLayout } from './base';
 
 /**
  * Debugging Leadership Title Layout
@@ -104,33 +105,8 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       text-align: left;
     }
 
-    /* Logo styling - DL icon with text inline, fluid scaling */
-    .slide[data-layout="debugging-leadership-title"] .zone-logo {
-      font-size: clamp(0.875rem, 1.2vw, 2.5rem);
-      font-weight: 500;
-      color: var(--color-primary);
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: clamp(0.5rem, 0.8vw, 1.5rem);
-      padding: clamp(1rem, 1.5vh, 2.5rem) clamp(1.5rem, 2vw, 3rem);
-      text-align: left;
-      justify-content: flex-start;
-      font-family: var(--font-family-mono);
-    }
-
-    /* DL logo icon - using actual logo image, fluid scaling */
-    .slide[data-layout="debugging-leadership-title"] .zone-logo::before {
-      content: '';
-      display: block;
-      flex-shrink: 0;
-      width: clamp(1.75rem, 2.5vw, 4rem);
-      height: clamp(1.75rem, 2.5vw, 4rem);
-      background-image: url('/examples/themes/debugging-leadership/media/favicon.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
+    /* Base logo styling - shared across all DL layouts */
+    ${debuggingLeadershipBaseLayout.customStyles}
 
     /* Title line styling - monospace font, fluid scaling for all viewport sizes */
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-1 {
