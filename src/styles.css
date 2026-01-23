@@ -4,29 +4,73 @@
  * These styles provide:
  * - CSS reset
  * - Full-page slide display
- * - Responsive sizing
+ * - Slide transitions
+ * - Progress indicator styling
  */
 
+/* CSS Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Full-screen layout */
 html,
 body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  font-family: var(--font-family-sans, system-ui, sans-serif);
+  background-color: var(--color-background, #ffffff);
+  color: var(--color-foreground, #000000);
 }
 
+/* Presentation container - full viewport */
 #app {
   width: 100%;
   height: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Ensure slides fill the viewport */
-#app > * {
+/* Slide container - full screen */
+.slide {
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Hide slides by default (DeckRenderer will show the active one) */
+.slide[style*="display: none"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Slide zones inherit full size */
+.slide-zone {
+  width: 100%;
+}
+
+/* Progress indicator styling */
+.progress-indicator {
+  font-family: var(--font-family-sans, system-ui, sans-serif);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Ensure progress indicator is readable */
+.progress-indicator[data-position="bottom-right"],
+.progress-indicator[data-position="bottom-left"],
+.progress-indicator[data-position="bottom"],
+.progress-indicator[data-position="top-right"],
+.progress-indicator[data-position="top-left"],
+.progress-indicator[data-position="top"] {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius-sm, 4px);
+  backdrop-filter: blur(4px);
 }
