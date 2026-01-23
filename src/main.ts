@@ -14,6 +14,7 @@ import { exampleTheme } from './lib/theming/example-theme';
 import { titleLayout } from './lib/design-system/layouts/title';
 import { sectionLayout } from './lib/design-system/layouts/section';
 import { contentLayout } from './lib/design-system/layouts/content';
+import { twoColumnLayout } from './lib/design-system/layouts/two-column';
 import { layoutRegistry } from './lib/design-system/layout-registry';
 import type { Deck } from './lib/types/deck';
 
@@ -21,6 +22,7 @@ import type { Deck } from './lib/types/deck';
 layoutRegistry.registerLayout('title', titleLayout);
 layoutRegistry.registerLayout('section', sectionLayout);
 layoutRegistry.registerLayout('content', contentLayout);
+layoutRegistry.registerLayout('two-column', twoColumnLayout);
 
 // Create a demo deck with 5 slides
 const demoDeck: Deck = {
