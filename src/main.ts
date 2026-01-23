@@ -21,6 +21,7 @@ import { imageRightLayout } from './lib/design-system/layouts/image-right';
 import { split4060Layout } from './lib/design-system/layouts/split-40-60';
 import { split6040Layout } from './lib/design-system/layouts/split-60-40';
 import { quoteLayout } from './lib/design-system/layouts/quote';
+import { comparisonLayout } from './lib/design-system/layouts/comparison';
 import { layoutRegistry } from './lib/design-system/layout-registry';
 import type { Deck } from './lib/types/deck';
 
@@ -35,6 +36,7 @@ layoutRegistry.registerLayout('image-right', imageRightLayout);
 layoutRegistry.registerLayout('split-40-60', split4060Layout);
 layoutRegistry.registerLayout('split-60-40', split6040Layout);
 layoutRegistry.registerLayout('quote', quoteLayout);
+layoutRegistry.registerLayout('comparison', comparisonLayout);
 
 // Create a demo deck showcasing all 5 core layouts
 const demoDeck: Deck = {
