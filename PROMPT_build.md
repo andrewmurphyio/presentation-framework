@@ -31,9 +31,9 @@ DO:
 
 3. Write tests for the functionality.
 
-4. Run tests: `npm test`
+4. Run validation: `npm run validate` (runs typecheck + lint + tests)
 
-5. When tests pass:
+5. When validation passes:
    - Mark the task ✅ in @IMPLEMENTATION_PLAN.md
    - `git add -A && git commit -m "description"`
    - `git push`
@@ -48,3 +48,5 @@ DO:
 - Keep @AGENTS.md operational only (not progress notes).
 - When a phase is 100% complete, note it and stop. Human will review before next phase.
 - Don't write tests just for type compilation. Types are validated by the build. Focus tests on behavior and logic.
+- Run `npm run validate` before committing to catch type errors. Tests may pass with mocks but miss interface/class mismatches.
+- Ensure interfaces and classes match. If a type declares a method, the implementing class must have it.

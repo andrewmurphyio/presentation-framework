@@ -1,5 +1,5 @@
 import type { Slide } from '../types/slide';
-import type { ThemeClass } from '../theming/theme-class';
+import type { Theme, CSSVariables } from '../types/theme';
 import type { LayoutDefinition } from '../types/layout';
 import { layoutRegistry } from '../design-system/layout-registry';
 
@@ -20,7 +20,7 @@ export class SlideRenderer {
    */
   render(
     slide: Slide,
-    theme: ThemeClass,
+    theme: Theme,
     customLayoutRegistry = layoutRegistry
   ): string {
     // Get the layout definition
@@ -54,7 +54,7 @@ export class SlideRenderer {
    * Generate style tag with CSS variables and layout styles
    */
   private generateStyleTag(
-    cssVars: Record<string, string>,
+    cssVars: CSSVariables,
     layout: LayoutDefinition
   ): string {
     const varsString = Object.entries(cssVars)

@@ -109,7 +109,7 @@ describe('DeckRenderer', () => {
       renderer = new DeckRenderer(mockDeck, { container });
       renderer.render();
 
-      const slides = container.querySelectorAll('.slide') as NodeListOf<HTMLElement>;
+      const slides = container.querySelectorAll('.slide');
       expect(slides[0].style.display).toBe('grid');
       expect(slides[1].style.display).toBe('none');
       expect(slides[2].style.display).toBe('none');
@@ -155,7 +155,7 @@ describe('DeckRenderer', () => {
       const navigator = renderer.getNavigator();
       navigator.next();
 
-      const slides = container.querySelectorAll('.slide') as NodeListOf<HTMLElement>;
+      const slides = container.querySelectorAll('.slide');
       expect(slides[0].style.display).toBe('none');
       expect(slides[1].style.display).toBe('grid');
       expect(slides[2].style.display).toBe('none');
@@ -168,7 +168,7 @@ describe('DeckRenderer', () => {
       const navigator = renderer.getNavigator();
       navigator.goToSlide(2);
 
-      const slides = container.querySelectorAll('.slide') as NodeListOf<HTMLElement>;
+      const slides = container.querySelectorAll('.slide');
       expect(slides[0].style.display).toBe('none');
       expect(slides[1].style.display).toBe('none');
       expect(slides[2].style.display).toBe('grid');
@@ -181,7 +181,7 @@ describe('DeckRenderer', () => {
       const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
       window.dispatchEvent(event);
 
-      const slides = container.querySelectorAll('.slide') as NodeListOf<HTMLElement>;
+      const slides = container.querySelectorAll('.slide');
       expect(slides[0].style.display).toBe('none');
       expect(slides[1].style.display).toBe('grid');
     });

@@ -1,10 +1,5 @@
 import type { DesignTokens } from '../types/tokens';
-
-/**
- * CSS Variable mapping for design tokens
- * Maps token paths to CSS custom property names
- */
-export type CSSVariables = Record<string, string>;
+import type { Theme, CSSVariables } from '../types/theme';
 
 /**
  * Theme class provides token management and CSS variable generation
@@ -12,11 +7,14 @@ export type CSSVariables = Record<string, string>;
  * Themes wrap DesignTokens and provide utilities for applying them
  * to slides via CSS custom properties.
  */
-export class ThemeClass {
-  constructor(
-    private readonly name: string,
-    private readonly tokens: DesignTokens
-  ) {}
+export class ThemeClass implements Theme {
+  readonly name: string;
+  readonly tokens: DesignTokens;
+
+  constructor(name: string, tokens: DesignTokens) {
+    this.name = name;
+    this.tokens = tokens;
+  }
 
   /**
    * Get the theme name
@@ -50,7 +48,7 @@ export class ThemeClass {
 
     // Color tokens
     Object.entries(this.tokens.colors).forEach(([key, value]) => {
-      vars[`--color-${key}`] = value;
+      vars[`--color-${key}`] = value as string;
     });
 
     // Typography - font families
@@ -75,7 +73,7 @@ export class ThemeClass {
 
     // Spacing tokens
     Object.entries(this.tokens.spacing).forEach(([key, value]) => {
-      vars[`--spacing-${key}`] = value;
+      vars[`--spacing-${key}`] = value as string;
     });
 
     // Border radius
@@ -90,7 +88,7 @@ export class ThemeClass {
 
     // Shadows
     Object.entries(this.tokens.shadows).forEach(([key, value]) => {
-      vars[`--shadow-${key}`] = value;
+      vars[`--shadow-${key}`] = value as string;
     });
 
     return vars;

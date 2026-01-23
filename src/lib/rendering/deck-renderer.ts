@@ -100,7 +100,9 @@ export class DeckRenderer {
 
   private applyLayoutStyles(element: HTMLElement, layout: LayoutDefinition): void {
     element.style.display = 'grid';
-    element.style.gridTemplateAreas = layout.gridTemplateAreas;
+    if (layout.gridTemplateAreas) {
+      element.style.gridTemplateAreas = layout.gridTemplateAreas;
+    }
     element.style.gridTemplateColumns = layout.gridTemplateColumns || '1fr';
     element.style.gridTemplateRows = layout.gridTemplateRows || 'auto';
     element.style.width = '100%';

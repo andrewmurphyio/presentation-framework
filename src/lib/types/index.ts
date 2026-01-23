@@ -11,7 +11,7 @@ export type {
   DesignTokens,
 } from './tokens';
 
-export type { Theme } from './theme';
+export type { Theme, CSSVariables } from './theme';
 
 export type { LayoutZone, LayoutDefinition } from './layout';
 

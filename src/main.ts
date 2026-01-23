@@ -12,11 +12,13 @@ import { DeckRenderer } from './lib/rendering/deck-renderer';
 import { ProgressIndicator } from './lib/ui/progress-indicator';
 import { exampleTheme } from './lib/theming/example-theme';
 import { titleLayout } from './lib/design-system/layouts/title';
+import { sectionLayout } from './lib/design-system/layouts/section';
 import { layoutRegistry } from './lib/design-system/layout-registry';
 import type { Deck } from './lib/types/deck';
 
-// Register the title layout in the global registry
+// Register layouts in the global registry
 layoutRegistry.registerLayout('title', titleLayout);
+layoutRegistry.registerLayout('section', sectionLayout);
 
 // Create a demo deck with 5 slides
 const demoDeck: Deck = {
