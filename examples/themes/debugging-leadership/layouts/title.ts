@@ -84,14 +84,14 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       position: relative;
     }
 
-    /* Pink separator line */
+    /* Pink separator line - fluid scaling, positioned above footer text */
     .slide[data-layout="debugging-leadership-title"]::before {
       content: '';
       position: absolute;
-      bottom: 5rem;
-      left: 2.5rem;
-      right: 2.5rem;
-      height: 2px;
+      bottom: clamp(5rem, 8vh, 12rem);
+      left: clamp(1.5rem, 2vw, 3rem);
+      right: clamp(1.5rem, 2vw, 3rem);
+      height: clamp(2px, 0.2vh, 4px);
       background: var(--color-primary);
     }
 
@@ -104,42 +104,42 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       text-align: left;
     }
 
-    /* Logo styling - DL icon with text inline */
+    /* Logo styling - DL icon with text inline, fluid scaling */
     .slide[data-layout="debugging-leadership-title"] .zone-logo {
-      font-size: 1.25rem;
+      font-size: clamp(0.875rem, 1.2vw, 2.5rem);
       font-weight: 500;
       color: var(--color-primary);
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 0.75rem;
-      padding: 1.5rem 2.5rem;
+      gap: clamp(0.5rem, 0.8vw, 1.5rem);
+      padding: clamp(1rem, 1.5vh, 2.5rem) clamp(1.5rem, 2vw, 3rem);
       text-align: left;
       justify-content: flex-start;
       font-family: var(--font-family-mono);
     }
 
-    /* DL logo icon - using actual logo image */
+    /* DL logo icon - using actual logo image, fluid scaling */
     .slide[data-layout="debugging-leadership-title"] .zone-logo::before {
       content: '';
       display: block;
       flex-shrink: 0;
-      width: 2.25rem;
-      height: 2.25rem;
+      width: clamp(1.75rem, 2.5vw, 4rem);
+      height: clamp(1.75rem, 2.5vw, 4rem);
       background-image: url('/examples/themes/debugging-leadership/media/favicon.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
     }
 
-    /* Title line styling - monospace font, larger size */
+    /* Title line styling - monospace font, fluid scaling for all viewport sizes */
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-1 {
-      font-size: clamp(4rem, 8vw, 9rem);
+      font-size: clamp(2.5rem, 7.5vw, 25rem);
       font-weight: 700;
       color: var(--color-primary);
       line-height: 1.1;
       text-align: left;
-      padding: 0 2rem;
+      padding: 0 clamp(1rem, 2vw, 3rem);
       font-family: var(--font-family-mono);
       display: flex;
       align-items: center;
@@ -147,24 +147,24 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
 
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-      font-size: clamp(4rem, 8vw, 9rem);
+      font-size: clamp(2.5rem, 7.5vw, 25rem);
       font-weight: 700;
       color: var(--color-foreground);
       line-height: 1.1;
       text-align: left;
-      padding: 0 2rem;
+      padding: 0 clamp(1rem, 2vw, 3rem);
       font-family: var(--font-family-mono);
       display: flex;
       align-items: center;
     }
 
-    /* Presenter styling */
+    /* Presenter styling - fluid scaling */
     .slide[data-layout="debugging-leadership-title"] .zone-presenter-label {
-      font-size: 0.9rem;
+      font-size: clamp(0.75rem, 1vw, 2rem);
       font-weight: 700;
       color: var(--color-foreground);
       text-align: left;
-      padding: 1rem 2.5rem 0.25rem 2.5rem;
+      padding: clamp(0.75rem, 1vh, 1.5rem) clamp(1.5rem, 2vw, 3rem) clamp(0.125rem, 0.3vh, 0.5rem) clamp(1.5rem, 2vw, 3rem);
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
@@ -172,92 +172,37 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
     }
 
     .slide[data-layout="debugging-leadership-title"] .zone-presenter-name {
-      font-size: 0.9rem;
+      font-size: clamp(0.75rem, 1vw, 2rem);
       font-weight: 400;
       color: var(--color-foreground);
       text-align: left;
-      padding: 0 2.5rem 1.5rem 2.5rem;
+      padding: 0 clamp(1.5rem, 2vw, 3rem) clamp(1rem, 1.5vh, 2rem) clamp(1.5rem, 2vw, 3rem);
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: flex-start;
     }
 
-    /* Website styling - right aligned */
+    /* Website styling - right aligned, fluid scaling */
     .slide[data-layout="debugging-leadership-title"] .zone-website {
-      font-size: 0.9rem;
+      font-size: clamp(0.75rem, 1vw, 2rem);
       font-weight: 400;
       color: var(--color-foreground);
       text-align: right;
-      padding: 1rem 2.5rem 1.5rem 2.5rem;
+      padding: clamp(0.75rem, 1vh, 1.5rem) clamp(1.5rem, 2vw, 3rem) clamp(1rem, 1.5vh, 2rem) clamp(1.5rem, 2vw, 3rem);
       display: flex;
       justify-content: flex-end;
       align-items: flex-end;
       grid-row: span 2;
     }
 
-    /* Large screens (1080p+) - text should almost fill screen */
-    @media (min-width: 1920px) and (max-width: 3839px) {
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-        font-size: clamp(7rem, 7.5vw, 10rem);
-        padding: 0 1.5rem;
-      }
-    }
-
-    /* 4K displays (3840px+) - scale proportionally */
-    @media (min-width: 3840px) {
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-        font-size: clamp(14rem, 7.5vw, 20rem);
-        padding: 0 2rem;
-      }
-    }
-
-    /* Responsive font sizing */
-    @media (max-width: 1200px) {
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-        font-size: clamp(2.5rem, 5vw, 4rem);
-      }
-    }
-
-    @media (max-width: 900px) {
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
-      .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-        font-size: clamp(2rem, 4vw, 3rem);
-      }
-    }
-
+    /* Responsive adjustments for very small screens only */
     @media (max-width: 600px) {
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
         font-size: 1.75rem;
         padding: 0 1.5rem;
-      }
-
-      .slide[data-layout="debugging-leadership-title"] .zone-logo {
-        font-size: 1rem;
-        padding: 1rem 1.5rem;
-      }
-
-      .slide[data-layout="debugging-leadership-title"] .zone-presenter-label,
-      .slide[data-layout="debugging-leadership-title"] .zone-presenter-name,
-      .slide[data-layout="debugging-leadership-title"] .zone-website {
-        font-size: 0.8rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
-
-      .slide[data-layout="debugging-leadership-title"]::before {
-        left: 1.5rem;
-        right: 1.5rem;
-        bottom: 4rem;
       }
     }
   `,

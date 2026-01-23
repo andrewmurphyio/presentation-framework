@@ -83,4 +83,57 @@ describe('Example Theme', () => {
     expect(css).toContain('--color-accent: #10b981;');
     expect(css).toContain('}');
   });
+
+  describe('theme layout support', () => {
+    it('should have a custom featured layout', () => {
+      const layouts = exampleTheme.getLayouts();
+      expect(layouts).toHaveLength(1);
+      expect(layouts[0].name).toBe('featured');
+    });
+
+    it('should have featured layout with correct zones', () => {
+      const layouts = exampleTheme.getLayouts();
+      const featuredLayout = layouts[0];
+
+      expect(featuredLayout.zones).toHaveLength(4);
+      const zoneNames = featuredLayout.zones.map(z => z.name);
+      expect(zoneNames).toContain('kicker');
+      expect(zoneNames).toContain('title');
+      expect(zoneNames).toContain('subtitle');
+      expect(zoneNames).toContain('cta');
+    });
+
+    it('should have featured layout with custom styles', () => {
+      const layouts = exampleTheme.getLayouts();
+      const featuredLayout = layouts[0];
+
+      expect(featuredLayout.customStyles).toBeDefined();
+      expect(featuredLayout.customStyles).toContain('background: linear-gradient');
+      expect(featuredLayout.customStyles).toContain('var(--color-primary)');
+      expect(featuredLayout.customStyles).toContain('var(--color-secondary)');
+    });
+
+    it('should have featured layout with correct grid template', () => {
+      const layouts = exampleTheme.getLayouts();
+      const featuredLayout = layouts[0];
+
+      expect(featuredLayout.gridTemplateAreas).toBeDefined();
+      expect(featuredLayout.gridTemplateAreas).toContain('kicker');
+      expect(featuredLayout.gridTemplateAreas).toContain('title');
+      expect(featuredLayout.gridTemplateAreas).toContain('subtitle');
+      expect(featuredLayout.gridTemplateAreas).toContain('cta');
+      expect(featuredLayout.gridTemplateRows).toBe('1fr auto auto auto 2fr auto 1fr');
+    });
+
+    it('should demonstrate theme-level customization', () => {
+      const layouts = exampleTheme.getLayouts();
+      const featuredLayout = layouts[0];
+
+      // Check that it uses theme-specific colors in styles
+      expect(featuredLayout.customStyles).toContain('var(--color-accent)');
+      expect(featuredLayout.customStyles).toContain('.zone-kicker');
+      expect(featuredLayout.customStyles).toContain('.zone-cta');
+      expect(featuredLayout.customStyles).toContain('text-transform: uppercase');
+    });
+  });
 });
