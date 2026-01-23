@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { Theme } from "@lib/theming/theme";
 import { defaultTokens } from '@/lib/design-system/default-tokens';
+import { CustomLayoutBuilder } from '@/lib/design-system/custom-layout-builder';
+import type { CustomLayoutDefinition } from '@/lib/types/deck';
 
 describe('Theme', () => {
   const testTheme = new Theme('test-theme', defaultTokens);
@@ -135,6 +137,104 @@ describe('Theme', () => {
 
       // Middle lines should start with spaces (indented)
       expect(lines[1]?.startsWith('  --')).toBe(true);
+    });
+  });
+
+  describe('layout support', () => {
+    it('should create theme without layouts', () => {
+      const theme = new Theme('no-layouts', defaultTokens);
+      expect(theme.getName()).toBe('no-layouts');
+      expect(theme.getLayouts()).toEqual([]);
+    });
+
+    it('should create theme with layouts', () => {
+      const customLayout = CustomLayoutBuilder.create('theme-layout', 'Theme-specific layout')
+        .addZone('content', 'content', 'Main content area')
+        .setGridTemplateAreas('"content"')
+        .build() as CustomLayoutDefinition;
+
+      const theme = new Theme('with-layouts', defaultTokens, [customLayout]);
+
+      expect(theme.getName()).toBe('with-layouts');
+      expect(theme.getLayouts()).toHaveLength(1);
+      expect(theme.getLayouts()[0].name).toBe('theme-layout');
+    });
+
+    it('should return empty array when layouts is undefined', () => {
+      const theme = new Theme('undefined-layouts', defaultTokens, undefined);
+      expect(theme.getLayouts()).toEqual([]);
+    });
+
+    it('should return layouts array when defined', () => {
+      const layout1 = CustomLayoutBuilder.create('layout1', 'First layout')
+        .addZone('zone1', 'zone1')
+        .setGridTemplateAreas('"zone1"')
+        .build() as CustomLayoutDefinition;
+
+      const layout2 = CustomLayoutBuilder.create('layout2', 'Second layout')
+        .addZone('zone2', 'zone2')
+        .setGridTemplateAreas('"zone2"')
+        .build() as CustomLayoutDefinition;
+
+      const theme = new Theme('multi-layouts', defaultTokens, [layout1, layout2]);
+      const layouts = theme.getLayouts();
+
+      expect(layouts).toHaveLength(2);
+      expect(layouts[0].name).toBe('layout1');
+      expect(layouts[1].name).toBe('layout2');
+    });
+
+    it('should maintain layouts immutability', () => {
+      const customLayout = CustomLayoutBuilder.create('immutable', 'Immutable layout')
+        .addZone('zone', 'zone')
+        .setGridTemplateAreas('"zone"')
+        .build() as CustomLayoutDefinition;
+
+      const layouts = [customLayout];
+      const theme = new Theme('immutable-test', defaultTokens, layouts);
+
+      // Modifying original array should not affect theme
+      layouts.push(CustomLayoutBuilder.create('extra', 'Extra').addZone('extra', 'extra').setGridTemplateAreas('"extra"').build() as CustomLayoutDefinition);
+      expect(theme.getLayouts()).toHaveLength(1);
+
+      // Getting layouts multiple times should return same reference
+      const layouts1 = theme.getLayouts();
+      const layouts2 = theme.getLayouts();
+      expect(layouts1).toBe(layouts2);
+    });
+
+    it('should work with extended theme layouts', () => {
+      const baseLayout = CustomLayoutBuilder.create('base-theme-layout', 'Base theme layout')
+        .addZone('header', 'header')
+        .addZone('content', 'content')
+        .setGridTemplateAreas('"header" "content"')
+        .build() as CustomLayoutDefinition;
+
+      const extendedLayout = CustomLayoutBuilder.create('extended-theme-layout', 'Extended')
+        .extends('base-theme-layout')
+        .addAdditionalZones([{ name: 'footer', gridArea: 'footer' }])
+        .setGridTemplateAreas('"header" "content" "footer"')
+        .build() as CustomLayoutDefinition;
+
+      const theme = new Theme('extended-layouts', defaultTokens, [baseLayout, extendedLayout]);
+      const layouts = theme.getLayouts();
+
+      expect(layouts).toHaveLength(2);
+      expect(layouts[1].extends).toBe('base-theme-layout');
+    });
+
+    it('should work with composed theme layouts', () => {
+      const composedLayout = CustomLayoutBuilder.create('composed-theme', 'Composed layout')
+        .composeFrom(['title', 'content'])
+        .addAdditionalZones([{ name: 'sidebar', gridArea: 'sidebar' }])
+        .setGridTemplateAreas('"title sidebar" "content sidebar"')
+        .build() as CustomLayoutDefinition;
+
+      const theme = new Theme('composed-theme', defaultTokens, [composedLayout]);
+      const layouts = theme.getLayouts();
+
+      expect(layouts).toHaveLength(1);
+      expect(layouts[0].composeFrom).toEqual(['title', 'content']);
     });
   });
 });

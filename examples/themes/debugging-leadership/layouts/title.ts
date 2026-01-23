@@ -134,12 +134,12 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
 
     /* Title line styling - monospace font, larger size */
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-1 {
-      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-size: clamp(4rem, 8vw, 9rem);
       font-weight: 700;
       color: var(--color-primary);
       line-height: 1.1;
       text-align: left;
-      padding: 0 2.5rem;
+      padding: 0 2rem;
       font-family: var(--font-family-mono);
       display: flex;
       align-items: center;
@@ -147,12 +147,12 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
 
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-size: clamp(4rem, 8vw, 9rem);
       font-weight: 700;
       color: var(--color-foreground);
       line-height: 1.1;
       text-align: left;
-      padding: 0 2.5rem;
+      padding: 0 2rem;
       font-family: var(--font-family-mono);
       display: flex;
       align-items: center;
@@ -194,6 +194,26 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       justify-content: flex-end;
       align-items: flex-end;
       grid-row: span 2;
+    }
+
+    /* Large screens (1080p+) - text should almost fill screen */
+    @media (min-width: 1920px) and (max-width: 3839px) {
+      .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
+      .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
+      .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
+        font-size: clamp(7rem, 7.5vw, 10rem);
+        padding: 0 1.5rem;
+      }
+    }
+
+    /* 4K displays (3840px+) - scale proportionally */
+    @media (min-width: 3840px) {
+      .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
+      .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
+      .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
+        font-size: clamp(14rem, 7.5vw, 20rem);
+        padding: 0 2rem;
+      }
     }
 
     /* Responsive font sizing */

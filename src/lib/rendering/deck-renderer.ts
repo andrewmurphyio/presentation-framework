@@ -164,11 +164,10 @@ export class DeckRenderer {
 
   private createSlideElement(slide: Slide, index: number): HTMLElement {
     // Resolve layout through three-tier hierarchy
-    // Theme layouts will be supported when Theme class is updated
     const layout = this.layoutResolver.resolveLayout(
       slide.layout,
       this.deck.customLayouts,
-      undefined // Theme layouts not yet implemented
+      this.deck.theme.getLayouts()
     );
     const slideDiv = document.createElement('div');
 
@@ -284,11 +283,10 @@ export class DeckRenderer {
     if (!slide) return;
 
     // Resolve layout through three-tier hierarchy
-    // Theme layouts will be supported when Theme class is updated
     const layout = this.layoutResolver.resolveLayout(
       slide.layout,
       this.deck.customLayouts,
-      undefined // Theme layouts not yet implemented
+      this.deck.theme.getLayouts()
     );
 
     const debugInfo = this.debugCollector.collectSlideDebugInfo(

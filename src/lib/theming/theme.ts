@@ -1,4 +1,5 @@
 import type { DesignTokens } from '../types/tokens';
+import type { CustomLayoutDefinition } from '../types/deck';
 
 /**
  * CSS Variable mapping for design tokens
@@ -15,10 +16,13 @@ export type CSSVariables = Record<string, string>;
 export class Theme {
   readonly name: string;
   readonly tokens: DesignTokens;
+  readonly layouts?: CustomLayoutDefinition[];
 
-  constructor(name: string, tokens: DesignTokens) {
+  constructor(name: string, tokens: DesignTokens, layouts?: CustomLayoutDefinition[]) {
     this.name = name;
     this.tokens = tokens;
+    // Create defensive copy of layouts array to ensure immutability
+    this.layouts = layouts ? [...layouts] : undefined;
   }
 
   /**
@@ -33,6 +37,14 @@ export class Theme {
    */
   getTokens(): DesignTokens {
     return this.tokens;
+  }
+
+  /**
+   * Get theme-specific layouts
+   * Returns an empty array if no layouts are defined
+   */
+  getLayouts(): CustomLayoutDefinition[] {
+    return this.layouts || [];
   }
 
   /**
