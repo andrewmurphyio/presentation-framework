@@ -4,9 +4,15 @@ import { NavigationController } from '../navigation/navigation-controller';
 import { layoutRegistry } from '../design-system/layout-registry';
 import type { LayoutDefinition } from '../types/layout';
 import type { Slide } from '../types/slide';
+import { DebugMode } from '../debug/debug-mode';
+import { DebugOverlay } from '../debug/debug-overlay';
+import { DebugKeyboardController } from '../debug/debug-keyboard-controller';
+import { DebugDataCollector } from '../debug/debug-data-collector';
+import type { DebugOptions } from '../types/debug';
 
 export interface DeckRendererOptions {
   container?: HTMLElement;
+  debug?: boolean | DebugOptions;
 }
 
 export class DeckRenderer {
@@ -15,6 +21,10 @@ export class DeckRenderer {
   private container: HTMLElement;
   private slideElements: HTMLElement[] = [];
   private unsubscribe?: () => void;
+  private debugMode?: DebugMode;
+  private debugOverlay?: DebugOverlay;
+  private debugKeyboard?: DebugKeyboardController;
+  private debugCollector?: DebugDataCollector;
 
   constructor(
     private readonly deck: Deck,
@@ -23,6 +33,11 @@ export class DeckRenderer {
     this.container = options.container || this.createDefaultContainer();
     this.navigator = new DeckNavigator(deck);
     this.controller = new NavigationController(this.navigator);
+
+    // Initialize debug mode if requested
+    if (options.debug) {
+      this.initializeDebugMode(options.debug);
+    }
   }
 
   render(): void {
@@ -35,9 +50,21 @@ export class DeckRenderer {
     // Show initial slide
     this.updateVisibleSlide();
 
+    // Mount debug overlay if enabled
+    if (this.debugOverlay) {
+      this.debugOverlay.mount();
+      this.updateDebugData();
+    }
+
+    // Enable debug keyboard if enabled
+    if (this.debugKeyboard) {
+      this.debugKeyboard.enable();
+    }
+
     // Listen for navigation events
     this.unsubscribe = this.navigator.onNavigate(() => {
       this.updateVisibleSlide();
+      this.updateDebugData();
     });
   }
 
@@ -46,6 +73,15 @@ export class DeckRenderer {
       this.unsubscribe();
     }
     this.controller.destroy();
+
+    // Destroy debug components
+    if (this.debugKeyboard) {
+      this.debugKeyboard.destroy();
+    }
+    if (this.debugOverlay) {
+      this.debugOverlay.destroy();
+    }
+
     this.container.innerHTML = '';
   }
 
@@ -122,6 +158,7 @@ export class DeckRenderer {
 
       const zoneDiv = document.createElement('div');
       zoneDiv.className = `slide-zone zone-${zone.name}`;
+      zoneDiv.setAttribute('data-zone', zone.name);
       zoneDiv.style.gridArea = zone.gridArea || zone.name;
       zoneDiv.style.display = 'flex';
       zoneDiv.style.flexDirection = 'column';
@@ -156,5 +193,35 @@ export class DeckRenderer {
         element.style.display = 'none';
       }
     });
+  }
+
+  private initializeDebugMode(debugOption: boolean | DebugOptions): void {
+    const debugOptions = typeof debugOption === 'boolean' ? {} : debugOption;
+
+    this.debugMode = new DebugMode(debugOptions, typeof debugOption === 'boolean' ? debugOption : true);
+    this.debugOverlay = new DebugOverlay(this.debugMode, this.container);
+    this.debugKeyboard = new DebugKeyboardController(this.debugMode);
+    this.debugCollector = new DebugDataCollector();
+  }
+
+  private updateDebugData(): void {
+    if (!this.debugOverlay || !this.debugCollector || !this.debugMode) return;
+    if (!this.debugMode.isEnabled()) return;
+
+    const currentIndex = this.navigator.getCurrentIndex();
+    const slide = this.deck.slides[currentIndex];
+    if (!slide) return;
+
+    const layout = layoutRegistry.getLayout(slide.layout);
+
+    const debugInfo = this.debugCollector.collectSlideDebugInfo(
+      slide,
+      layout,
+      this.deck.theme,
+      currentIndex,
+      this.deck.slides.length
+    );
+
+    this.debugOverlay.update(debugInfo);
   }
 }
