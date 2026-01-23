@@ -4,16 +4,18 @@ import type { LayoutDefinition } from '../../../../src/lib/types/layout';
  * Debugging Leadership Title Layout
  *
  * Custom title layout matching the Debugging Leadership brand design:
- * - Logo/brand in top-left corner
- * - Large multi-line title with mixed colors
+ * - Logo/brand in top-left corner (DL icon + "Debugging Leadership" text)
+ * - Large multi-line title with monospace font and mixed colors
+ * - Pink separator line above footer
  * - Presenter info bottom-left
  * - Website bottom-right
+ * - Gradient background (dark purple)
  *
  * Zones:
  * - logo: Top-left brand/logo area
- * - title-line-1: First line of title (colored)
- * - title-line-2: Second line of title
- * - title-line-3: Third line of title
+ * - title-line-1: First line of title (colored/primary)
+ * - title-line-2: Second line of title (white)
+ * - title-line-3: Third line of title (white)
  * - presenter-label: "Presented By:" label
  * - presenter-name: Presenter's name
  * - website: Website URL bottom-right
@@ -61,99 +63,123 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
   gridTemplateAreas: `
     "logo . ."
     ". . ."
-    "title1 title1 ."
-    "title2 title2 ."
-    "title3 title3 ."
+    "title1 title1 title1"
+    "title2 title2 title2"
+    "title3 title3 title3"
     ". . ."
+    "separator separator separator"
     "presenter-label . website"
     "presenter-name . website"
   `,
-  gridTemplateColumns: 'auto 1fr auto',
-  gridTemplateRows: 'auto 1fr auto auto auto 1fr auto auto',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  gridTemplateRows: 'auto 1fr auto auto auto 1fr auto auto auto',
   customStyles: `
-    /* Logo styling */
+    /* Container with gradient background */
+    .slide[data-layout="debugging-leadership-title"] {
+      padding: 0;
+      background: linear-gradient(180deg, #0D0416 0%, #1E0E2E 50%, #2A1042 100%);
+      display: grid;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+    }
+
+    /* Pink separator line */
+    .slide[data-layout="debugging-leadership-title"]::before {
+      content: '';
+      position: absolute;
+      bottom: 5.5rem;
+      left: 3rem;
+      right: 3rem;
+      height: 3px;
+      background: var(--color-primary);
+    }
+
+    /* Logo styling - DL icon with text */
     .slide[data-layout="debugging-leadership-title"] .zone-logo {
       font-size: 1.25rem;
       font-weight: 500;
-      color: var(--color-muted);
+      color: var(--color-primary);
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 2rem;
+      padding: 2rem 3rem;
       text-align: left;
       justify-content: flex-start;
+      font-family: var(--font-mono);
     }
 
+    /* DL logo icon */
     .slide[data-layout="debugging-leadership-title"] .zone-logo::before {
-      content: '🔧';
-      font-size: 1.5rem;
+      content: 'DL';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      background: linear-gradient(135deg, var(--color-primary) 0%, #9333EA 100%);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      font-family: var(--font-mono);
     }
 
-    /* Title line styling */
+    /* Title line styling - monospace font */
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-1 {
-      font-size: 5rem;
+      font-size: 4.5rem;
       font-weight: 700;
       color: var(--color-primary);
-      line-height: 1.1;
+      line-height: 1.15;
       text-align: left;
-      padding: 0 4rem;
-      letter-spacing: -0.02em;
+      padding: 0 3rem;
+      font-family: var(--font-mono);
       justify-content: flex-start;
     }
 
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
     .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-      font-size: 5rem;
+      font-size: 4.5rem;
       font-weight: 700;
       color: var(--color-foreground);
-      line-height: 1.1;
+      line-height: 1.15;
       text-align: left;
-      padding: 0 4rem;
-      letter-spacing: -0.02em;
+      padding: 0 3rem;
+      font-family: var(--font-mono);
       justify-content: flex-start;
     }
 
     /* Presenter styling */
     .slide[data-layout="debugging-leadership-title"] .zone-presenter-label {
-      font-size: 1.125rem;
-      font-weight: 400;
+      font-size: 1rem;
+      font-weight: 700;
       color: var(--color-foreground);
       text-align: left;
-      padding: 0 2rem;
-      opacity: 0.9;
+      padding: 1.5rem 3rem 0 3rem;
       justify-content: flex-start;
       align-items: flex-end;
     }
 
     .slide[data-layout="debugging-leadership-title"] .zone-presenter-name {
-      font-size: 1.125rem;
+      font-size: 1rem;
       font-weight: 400;
       color: var(--color-foreground);
       text-align: left;
-      padding: 0 2rem 2rem 2rem;
+      padding: 0 3rem 2rem 3rem;
       justify-content: flex-start;
       align-items: flex-start;
     }
 
     /* Website styling */
     .slide[data-layout="debugging-leadership-title"] .zone-website {
-      font-size: 1.125rem;
+      font-size: 1rem;
       font-weight: 400;
       color: var(--color-foreground);
       text-align: right;
-      padding: 2rem;
-      opacity: 0.9;
+      padding: 1.5rem 3rem 2rem 3rem;
       justify-content: flex-end;
       align-items: flex-end;
-    }
-
-    /* Container adjustments */
-    .slide[data-layout="debugging-leadership-title"] {
-      padding: 0;
-      background: var(--color-background);
-      display: grid;
-      height: 100vh;
-      width: 100vw;
+      grid-row: span 2;
     }
 
     /* All zones - remove default centering */
@@ -170,7 +196,7 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-        font-size: 4rem;
+        font-size: 3.5rem;
       }
     }
 
@@ -178,7 +204,7 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-        font-size: 3rem;
+        font-size: 2.5rem;
       }
     }
 
@@ -186,19 +212,27 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-1,
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-2,
       .slide[data-layout="debugging-leadership-title"] .zone-title-line-3 {
-        font-size: 2rem;
+        font-size: 1.75rem;
         padding: 0 2rem;
       }
 
       .slide[data-layout="debugging-leadership-title"] .zone-logo {
         font-size: 1rem;
-        padding: 1rem;
+        padding: 1rem 2rem;
       }
 
       .slide[data-layout="debugging-leadership-title"] .zone-presenter-label,
       .slide[data-layout="debugging-leadership-title"] .zone-presenter-name,
       .slide[data-layout="debugging-leadership-title"] .zone-website {
         font-size: 0.875rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+
+      .slide[data-layout="debugging-leadership-title"]::before {
+        left: 2rem;
+        right: 2rem;
+        bottom: 4.5rem;
       }
     }
   `,
