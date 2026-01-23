@@ -18,3 +18,16 @@ export type { LayoutZone, LayoutDefinition } from './layout';
 export type { Slide, SlideContent } from './slide';
 
 export type { Deck, DeckMetadata } from './deck';
+
+export type {
+  DebugPanelPosition,
+  DebugOptions,
+  DebugZoneInfo,
+  DebugLayoutInfo,
+  DebugThemeInfo,
+  DebugSlideInfo,
+  DebugContentInfo,
+  DebugAnimationInfo,
+  DebugTransitionInfo,
+  DebugInfo,
+} from './debug';
