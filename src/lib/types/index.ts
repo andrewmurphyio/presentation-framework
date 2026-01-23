@@ -16,3 +16,5 @@ export type { Theme } from './theme';
 export type { LayoutZone, LayoutDefinition } from './layout';
 
 export type { Slide, SlideContent } from './slide';
+
+export type { Deck, DeckMetadata } from './deck';

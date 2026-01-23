@@ -1,22 +1,50 @@
-0a. Study `specs/*` with up to 500 parallel Sonnet subagents to learn the presentation library specifications.
-0b. Study @IMPLEMENTATION_PLAN.md.
-0c. For reference, the application source code is in `src/*`.
+# BUILD MODE - One Task Per Iteration
 
-1. Your task is to implement functionality per the specifications using parallel subagents. Follow @IMPLEMENTATION_PLAN.md and choose the most important item to address. Before making changes, search the codebase (don't assume not implemented) using Sonnet subagents. You may use up to 500 parallel Sonnet subagents for searches/reads and only 1 Sonnet subagent for build/tests. Use Opus subagents when complex reasoning is needed (debugging, architectural decisions).
-2. After implementing functionality or resolving problems, run the tests for that unit of code that was improved. If functionality is missing then it's your job to add it as per the application specifications. Ultrathink.
-3. When you discover issues, immediately update @IMPLEMENTATION_PLAN.md with your findings using a subagent. When resolved, update and remove the item.
-4. When the tests pass, update @IMPLEMENTATION_PLAN.md, then `git add -A` then `git commit` with a message describing the changes. After the commit, `git push`.
+## Iteration Discipline (READ THIS FIRST)
 
-99999. Important: When authoring documentation, capture the why — tests and implementation importance.
-999999. Important: Single sources of truth, no migrations/adapters. If tests unrelated to your work fail, resolve them as part of the increment.
-9999999. As soon as there are no build or test errors create a git tag. If there are no git tags start at 0.0.0 and increment patch by 1 for example 0.0.1 if 0.0.0 does not exist.
-99999999. You may add extra logging if required to debug issues.
-999999999. Keep @IMPLEMENTATION_PLAN.md current with learnings using a subagent — future work depends on this to avoid duplicating efforts. Update especially after finishing your turn.
-9999999999. When you learn something new about how to run the application, update @AGENTS.md using a subagent but keep it brief. For example if you run commands multiple times before learning the correct command then that file should be updated.
-99999999999. For any bugs you notice, resolve them or document them in @IMPLEMENTATION_PLAN.md using a subagent even if it is unrelated to the current piece of work.
-999999999999. Implement functionality completely. Placeholders and stubs waste efforts and time redoing the same work.
-9999999999999. When @IMPLEMENTATION_PLAN.md becomes large periodically clean out the items that are completed from the file using a subagent.
-99999999999999. If you find inconsistencies in the specs/* then use an Opus 4.5 subagent with 'ultrathink' requested to update the specs.
-999999999999999. IMPORTANT: Keep @AGENTS.md operational only — status updates and progress notes belong in `IMPLEMENTATION_PLAN.md`. A bloated AGENTS.md pollutes every future loop's context.
-9999999999999999. PRESENTATION-SPECIFIC: After generating any PPTX, always run visual validation (convert to PDF then images) and inspect for text cutoff, overlap, positioning issues, and contrast problems. Fix issues before committing.
-99999999999999999. PRESENTATION-SPECIFIC: Ensure all HTML slides follow proper structure - text in semantic tags, CSS variables for design tokens, web-safe fonts only, proper slide zone layout (title/content/footnote).
+Each iteration you MUST:
+1. Read @IMPLEMENTATION_PLAN.md
+2. Find the FIRST unchecked task in the CURRENT phase only
+3. Implement that ONE task completely with tests
+4. Run tests to verify
+5. Commit immediately
+6. STOP - do not continue to next task
+
+DO NOT:
+- Study specs extensively before starting
+- Launch analysis subagents to "understand the codebase"
+- Plan or expand future phases
+- Work on multiple tasks
+- Rewrite the implementation plan
+- Add tasks to future phases
+
+DO:
+- Pick first unchecked task → build → test → commit
+- If stuck, make your best guess and iterate
+- Keep changes small and focused
+
+## The Actual Work
+
+1. Read @IMPLEMENTATION_PLAN.md and find the first unchecked (not ✅) task in the current phase.
+
+2. Implement that task. Before making changes, do a quick search to confirm it doesn't exist. Use subagents for searches if needed.
+
+3. Write tests for the functionality.
+
+4. Run tests: `npm test`
+
+5. When tests pass:
+   - Mark the task ✅ in @IMPLEMENTATION_PLAN.md
+   - `git add -A && git commit -m "description"`
+   - `git push`
+
+6. Update @AGENTS.md if you learned something operational (build commands, gotchas).
+
+## Rules
+
+- Implement completely. No placeholders or stubs.
+- Single source of truth. No migrations/adapters.
+- If unrelated tests fail, fix them.
+- Keep @AGENTS.md operational only (not progress notes).
+- When a phase is 100% complete, note it and stop. Human will review before next phase.
+- Don't write tests just for type compilation. Types are validated by the build. Focus tests on behavior and logic.

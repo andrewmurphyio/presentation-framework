@@ -1,9 +1,9 @@
 ---
 active: true
-iteration: 7
-max_iterations: 20
+iteration: 1
+max_iterations: 10
 completion_promise: null
-started_at: "2026-01-22T23:52:13Z"
+started_at: "2026-01-23T00:24:57Z"
 ---
 
 Read PROMPT_build.md and follow its instructions exactly.
