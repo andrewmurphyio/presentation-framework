@@ -153,10 +153,13 @@ describe('DebugOverlay', () => {
   });
 
   describe('Debug info management', () => {
-    it('should update with debug info when enabled', () => {
+    it('should update with debug info when enabled', async () => {
       debugMode.enable();
       overlay.mount();
       overlay.update(mockDebugInfo);
+
+      // Wait for requestAnimationFrame to complete
+      await new Promise((resolve) => requestAnimationFrame(resolve));
 
       const container = overlay.getContainer();
       // Check that panels were created
@@ -173,10 +176,14 @@ describe('DebugOverlay', () => {
       expect(panels?.length).toBe(0);
     });
 
-    it('should clear debug info', () => {
+    it('should clear debug info', async () => {
       debugMode.enable();
       overlay.mount();
       overlay.update(mockDebugInfo);
+
+      // Wait for requestAnimationFrame to complete
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
       overlay.clear();
 
       const container = overlay.getContainer();

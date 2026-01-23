@@ -102,41 +102,46 @@ export class DebugOverlay {
   update(debugInfo: DebugInfo): void {
     if (!this.container || !this.debugMode.isEnabled()) return;
 
-    // Get the current slide element
-    const slideElement = this.parentElement.querySelector('.slide[style*="display: grid"]') as HTMLElement;
-    if (!slideElement) return;
+    // Use requestAnimationFrame to ensure DOM is updated after slide visibility changes
+    requestAnimationFrame(() => {
+      if (!this.container) return;
 
-    // Update or create layout panel
-    if (this.layoutPanelElement) {
-      this.layoutPanel.update(debugInfo.layout);
-    } else {
-      this.layoutPanelElement = this.layoutPanel.render(debugInfo.layout);
-      this.container.appendChild(this.layoutPanelElement);
-    }
+      // Get the current slide element
+      const slideElement = this.parentElement.querySelector('.slide[style*="display: grid"]') as HTMLElement;
+      if (!slideElement) return;
 
-    // Update or create zone boundaries
-    if (this.zoneBoundariesElement) {
-      this.zoneBoundaries.update(debugInfo.layout.zones, slideElement);
-    } else {
-      this.zoneBoundariesElement = this.zoneBoundaries.render(debugInfo.layout.zones, slideElement);
-      this.container.appendChild(this.zoneBoundariesElement);
-    }
+      // Update or create layout panel
+      if (this.layoutPanelElement) {
+        this.layoutPanel.update(debugInfo.layout);
+      } else {
+        this.layoutPanelElement = this.layoutPanel.render(debugInfo.layout);
+        this.container!.appendChild(this.layoutPanelElement);
+      }
 
-    // Update or create token inspector
-    if (this.tokenInspectorElement) {
-      this.tokenInspector.update(debugInfo.theme);
-    } else {
-      this.tokenInspectorElement = this.tokenInspector.render(debugInfo.theme);
-      this.container.appendChild(this.tokenInspectorElement);
-    }
+      // Update or create zone boundaries
+      if (this.zoneBoundariesElement) {
+        this.zoneBoundaries.update(debugInfo.layout.zones, slideElement);
+      } else {
+        this.zoneBoundariesElement = this.zoneBoundaries.render(debugInfo.layout.zones, slideElement);
+        this.container!.appendChild(this.zoneBoundariesElement);
+      }
 
-    // Update or create metadata panel
-    if (this.metadataPanelElement) {
-      this.metadataPanel.update(debugInfo.slide, debugInfo.layout);
-    } else {
-      this.metadataPanelElement = this.metadataPanel.render(debugInfo.slide, debugInfo.layout);
-      this.container.appendChild(this.metadataPanelElement);
-    }
+      // Update or create token inspector
+      if (this.tokenInspectorElement) {
+        this.tokenInspector.update(debugInfo.theme);
+      } else {
+        this.tokenInspectorElement = this.tokenInspector.render(debugInfo.theme);
+        this.container!.appendChild(this.tokenInspectorElement);
+      }
+
+      // Update or create metadata panel
+      if (this.metadataPanelElement) {
+        this.metadataPanel.update(debugInfo.slide, debugInfo.layout);
+      } else {
+        this.metadataPanelElement = this.metadataPanel.render(debugInfo.slide, debugInfo.layout);
+        this.container!.appendChild(this.metadataPanelElement);
+      }
+    });
   }
 
   /**

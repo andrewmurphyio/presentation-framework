@@ -55,6 +55,7 @@ export class ZoneBoundaries {
   update(zones: DebugZoneInfo[], slideElement: HTMLElement): void {
     if (!this.container) return;
     this.slideElement = slideElement;
+    this.assignZoneColors(zones);
     this.renderZoneBoundaries(zones);
   }
 
