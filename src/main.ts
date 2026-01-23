@@ -1,8 +1,10 @@
 /**
  * Demo application entry point
  *
- * This demonstrates Phase 5 - Debug Mode:
+ * This demonstrates Phase 7 - Reusable Components:
  * - All 11 layout types (5 core + 6 advanced)
+ * - Deck-specific custom layouts (Phase 6)
+ * - Reusable components: CodeBlock, List, Callout, Image (Phase 7)
  * - Multi-slide navigation with keyboard controls
  * - Progress indicator
  * - Theme application
@@ -179,7 +181,7 @@ const demoDeck: Deck = {
   metadata: {
     title: 'Presentation Framework Demo',
     author: 'Demo Author',
-    description: 'Phase 6 - Custom Layouts Showcase',
+    description: 'Phase 7 - Reusable Components Showcase',
     date: new Date().toISOString().split('T')[0],
   },
   theme: debuggingLeadershipTheme,
@@ -347,6 +349,164 @@ const demoDeck: Deck = {
           </ul>
           <p style="margin-top: 2rem;">Resolution priority: Deck → Theme → System</p>
         `,
+      },
+    },
+    // Component showcase slides
+    {
+      id: 'slide-17',
+      layout: 'section',
+      content: {
+        heading: 'Component Library',
+      },
+    },
+    {
+      id: 'slide-18',
+      layout: 'content',
+      content: {
+        title: 'CodeBlock Component',
+        content: {
+          type: 'code-block',
+          language: 'typescript',
+          code: `interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+function createUser(data: Partial<User>): User {
+  return {
+    id: crypto.randomUUID(),
+    name: data.name ?? 'Anonymous',
+    email: data.email ?? 'noreply@example.com',
+  };
+}`,
+          showLineNumbers: true,
+          highlightLines: [1, 2, 3, 4],
+        },
+      },
+    },
+    {
+      id: 'slide-19',
+      layout: 'two-column',
+      content: {
+        title: 'List Component - All Variants',
+        left: [
+          {
+            type: 'list',
+            variant: 'bullet',
+            items: [
+              { text: 'Bullet list item 1' },
+              { text: 'Bullet list item 2' },
+              {
+                text: 'Nested bullet list',
+                children: [
+                  { text: 'Nested item A' },
+                  { text: 'Nested item B' },
+                ],
+              },
+            ],
+          },
+        ],
+        right: [
+          {
+            type: 'list',
+            variant: 'numbered',
+            items: [
+              { text: 'First numbered item' },
+              { text: 'Second numbered item' },
+              { text: 'Third numbered item' },
+            ],
+          },
+          {
+            type: 'list',
+            variant: 'checklist',
+            items: [
+              { text: 'Completed task', checked: true },
+              { text: 'Pending task', checked: false },
+              { text: 'Another completed task', checked: true },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      id: 'slide-20',
+      layout: 'two-column',
+      content: {
+        title: 'Callout Component - All Types',
+        left: [
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Information',
+            content: 'This is an informational callout with helpful context.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Success',
+            content: 'Operation completed successfully!',
+          },
+        ],
+        right: [
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Warning',
+            content: 'This action may have unintended consequences.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'error',
+            title: 'Error',
+            content: 'An error occurred. Please try again.',
+          },
+        ],
+      },
+    },
+    {
+      id: 'slide-21',
+      layout: 'content',
+      content: {
+        title: 'Image Component',
+        content: {
+          type: 'image',
+          src: '/examples/themes/debugging-leadership/media/barista.png',
+          alt: 'Example image demonstration',
+          fitMode: 'contain',
+          caption: 'Image with contain fit mode and caption',
+          lazyLoad: true,
+        },
+      },
+    },
+    {
+      id: 'slide-22',
+      layout: 'content',
+      content: {
+        title: 'Mixed Content Example',
+        content: [
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Components can be combined',
+            content: 'This slide demonstrates multiple components in a single zone.',
+          },
+          {
+            type: 'list',
+            variant: 'bullet',
+            items: [
+              { text: 'Components are composable' },
+              { text: 'Multiple components in one zone' },
+              { text: 'Rich content support' },
+            ],
+          },
+          {
+            type: 'code-block',
+            language: 'javascript',
+            code: `const components = ['CodeBlock', 'List', 'Callout', 'Image'];
+console.log('All components available:', components);`,
+          },
+        ],
       },
     },
   ],
