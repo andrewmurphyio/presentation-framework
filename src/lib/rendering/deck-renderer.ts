@@ -5,11 +5,19 @@ import { layoutRegistry } from '../design-system/layout-registry';
 import { LayoutResolver } from '../design-system/layout-resolver';
 import type { LayoutDefinition } from '../types/layout';
 import type { Slide } from '../types/slide';
+import type { PresentationComponent } from '../types/component';
+import { componentRegistry } from '../components/component-registry';
 import { DebugMode } from '../debug/debug-mode';
 import { DebugOverlay } from '../debug/debug-overlay';
 import { DebugKeyboardController } from '../debug/debug-keyboard-controller';
 import { DebugDataCollector } from '../debug/debug-data-collector';
 import type { DebugOptions } from '../types/debug';
+
+// Import component renderers to ensure they're registered
+import '../components/code-block';
+import '../components/list';
+import '../components/callout';
+import '../components/image';
 
 export interface DeckRendererOptions {
   container?: HTMLElement;
@@ -242,16 +250,35 @@ export class DeckRenderer {
       }
 
       // Support HTML content and components
-      if (typeof content === 'string') {
-        zoneDiv.innerHTML = content;
-      } else {
-        // For components, we need to render them to HTML
-        // This will be handled when component rendering is integrated with DeckRenderer
-        // For now, just skip non-string content
-        zoneDiv.textContent = '[Component rendering in DeckRenderer not yet implemented]';
-      }
+      const renderedContent = this.renderZoneContent(content);
+      zoneDiv.innerHTML = renderedContent;
       slideElement.appendChild(zoneDiv);
     });
+  }
+
+  /**
+   * Render zone content - handles strings, components, and arrays of components
+   */
+  private renderZoneContent(
+    content: string | PresentationComponent | PresentationComponent[]
+  ): string {
+    // Handle array of components
+    if (Array.isArray(content)) {
+      return content.map((item) => this.renderZoneContent(item)).join('\n');
+    }
+
+    // Handle single component object
+    if (typeof content === 'object' && content !== null && 'type' in content) {
+      if (componentRegistry.hasRenderer(content.type)) {
+        const renderer = componentRegistry.getRenderer(content.type);
+        return renderer(content);
+      }
+      // Fallback: if no renderer found, return empty string
+      return '';
+    }
+
+    // Handle string content (legacy)
+    return content;
   }
 
   private updateVisibleSlide(): void {
