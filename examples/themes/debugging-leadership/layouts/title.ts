@@ -95,6 +95,15 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       background: var(--color-primary);
     }
 
+    /* All zones base styling - MUST come before zone-specific styles */
+    .slide[data-layout="debugging-leadership-title"] .slide-zone {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      text-align: left;
+    }
+
     /* Logo styling - DL icon with text inline */
     .slide[data-layout="debugging-leadership-title"] .zone-logo {
       font-size: 1.25rem;
@@ -157,6 +166,8 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       text-align: left;
       padding: 1rem 2.5rem 0.25rem 2.5rem;
       display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
       align-items: flex-end;
     }
 
@@ -167,6 +178,8 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       text-align: left;
       padding: 0 2.5rem 1.5rem 2.5rem;
       display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
       align-items: flex-start;
     }
 
@@ -181,15 +194,6 @@ export const debuggingLeadershipTitleLayout: LayoutDefinition = {
       justify-content: flex-end;
       align-items: flex-end;
       grid-row: span 2;
-    }
-
-    /* All zones base styling */
-    .slide[data-layout="debugging-leadership-title"] .slide-zone {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      text-align: left;
     }
 
     /* Responsive font sizing */

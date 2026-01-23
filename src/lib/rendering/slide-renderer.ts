@@ -1,7 +1,9 @@
 import type { Slide } from '../types/slide';
 import type { Theme, CSSVariables } from '../types/theme';
 import type { LayoutDefinition } from '../types/layout';
+import type { CustomLayoutDefinition } from '../types/deck';
 import { layoutRegistry } from '../design-system/layout-registry';
+import { LayoutResolver } from '../design-system/layout-resolver';
 
 /**
  * SlideRenderer converts slide definitions to HTML
@@ -10,21 +12,33 @@ import { layoutRegistry } from '../design-system/layout-registry';
  * layout, injects content into zones, and generates styled HTML output.
  */
 export class SlideRenderer {
+  private layoutResolver: LayoutResolver;
+
+  constructor() {
+    this.layoutResolver = new LayoutResolver(layoutRegistry);
+  }
+
   /**
    * Render a slide to HTML
    *
    * @param slide - The slide to render
    * @param theme - The theme to apply
-   * @param customLayoutRegistry - Optional custom layout registry (defaults to global)
+   * @param deckLayouts - Optional deck-specific layouts
+   * @param themeLayouts - Optional theme-specific layouts
    * @returns HTML string with inline styles
    */
   render(
     slide: Slide,
     theme: Theme,
-    customLayoutRegistry = layoutRegistry
+    deckLayouts?: CustomLayoutDefinition[],
+    themeLayouts?: CustomLayoutDefinition[]
   ): string {
-    // Get the layout definition
-    const layout = customLayoutRegistry.getLayout(slide.layout);
+    // Resolve layout through three-tier hierarchy
+    const layout = this.layoutResolver.resolveLayout(
+      slide.layout,
+      deckLayouts,
+      themeLayouts
+    );
 
     // Generate CSS variables from theme
     const cssVars = theme.getCSSVariables();
@@ -126,6 +140,46 @@ ${varsString}
   /* Custom layout styles */
   ${layout.customStyles || ''}
 </style>`;
+  }
+
+  /**
+   * Render a slide to HTML using a custom layout registry (backward compatibility)
+   *
+   * @param slide - The slide to render
+   * @param theme - The theme to apply
+   * @param customLayoutRegistry - Custom layout registry to use
+   * @returns HTML string with inline styles
+   */
+  renderWithRegistry(
+    slide: Slide,
+    theme: Theme,
+    customLayoutRegistry = layoutRegistry
+  ): string {
+    // Get the layout definition directly from registry
+    const layout = customLayoutRegistry.getLayout(slide.layout);
+
+    // Generate CSS variables from theme
+    const cssVars = theme.getCSSVariables();
+
+    // Build the HTML
+    const styleTag = this.generateStyleTag(cssVars, layout);
+    const slideContent = this.generateSlideContent(slide, layout);
+
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${this.escapeHtml(slide.content.title || 'Slide')}</title>
+  ${styleTag}
+</head>
+<body>
+  <div class="slide" data-slide-id="${this.escapeHtml(slide.id)}" data-layout="${this.escapeHtml(slide.layout)}">
+    ${slideContent}
+  </div>
+</body>
+</html>`.trim();
   }
 
   /**
