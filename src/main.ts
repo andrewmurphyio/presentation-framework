@@ -16,6 +16,7 @@ import { sectionLayout } from './lib/design-system/layouts/section';
 import { contentLayout } from './lib/design-system/layouts/content';
 import { twoColumnLayout } from './lib/design-system/layouts/two-column';
 import { codeLayout } from './lib/design-system/layouts/code';
+import { imageLeftLayout } from './lib/design-system/layouts/image-left';
 import { layoutRegistry } from './lib/design-system/layout-registry';
 import type { Deck } from './lib/types/deck';
 
@@ -25,6 +26,7 @@ layoutRegistry.registerLayout('section', sectionLayout);
 layoutRegistry.registerLayout('content', contentLayout);
 layoutRegistry.registerLayout('two-column', twoColumnLayout);
 layoutRegistry.registerLayout('code', codeLayout);
+layoutRegistry.registerLayout('image-left', imageLeftLayout);
 
 // Create a demo deck showcasing all 5 core layouts
 const demoDeck: Deck = {
