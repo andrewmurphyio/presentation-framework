@@ -53,11 +53,11 @@ const demoDeck: Deck = {
       layout: 'title',
       content: {
         'header-left': '🔧 Debugging Leadership',
-        'header-right': 'Tech Conference 2024',
+        'header-right': 'Tech Conference 2026',
         title: 'Presentation Framework',
         subtitle: 'Phase 4: Advanced Layouts Showcase',
-        'footer-left': 'Presented by: Demo Author',
-        'footer-right': 'example.com',
+        'footer-left': 'Presented by: Andrew Murphy',
+        'footer-right': 'debuggingleadership.com',
       },
     },
     {
