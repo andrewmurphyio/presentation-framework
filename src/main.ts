@@ -13,7 +13,7 @@ import { DeckRenderer } from './lib/rendering/deck-renderer';
 import { ProgressIndicator } from './lib/ui/progress-indicator';
 // import { exampleTheme } from '@examples/themes/example';
 import { debuggingLeadershipTheme } from '@examples/themes/debugging-leadership';
-import { debuggingLeadershipTitleLayout } from '@examples/themes/debugging-leadership/layouts';
+import { debuggingLeadershipBaseLayout, debuggingLeadershipTitleLayout, debuggingLeadershipAgendaLayout } from '@examples/themes/debugging-leadership/layouts';
 import { titleLayout } from './lib/design-system/layouts/title';
 import { sectionLayout } from './lib/design-system/layouts/section';
 import { contentLayout } from './lib/design-system/layouts/content';
@@ -26,11 +26,15 @@ import { split6040Layout } from './lib/design-system/layouts/split-60-40';
 import { quoteLayout } from './lib/design-system/layouts/quote';
 import { comparisonLayout } from './lib/design-system/layouts/comparison';
 import { layoutRegistry } from './lib/design-system/layout-registry';
+import { CustomLayoutBuilder } from './lib/design-system/custom-layout-builder';
 import type { Deck } from './lib/types/deck';
+import type { CustomLayoutDefinition } from './lib/types/deck';
 
 // Register layouts in the global registry
 layoutRegistry.registerLayout('title', titleLayout);
+layoutRegistry.registerLayout('debugging-leadership-base', debuggingLeadershipBaseLayout);
 layoutRegistry.registerLayout('debugging-leadership-title', debuggingLeadershipTitleLayout);
+layoutRegistry.registerLayout('debugging-leadership-agenda', debuggingLeadershipAgendaLayout);
 layoutRegistry.registerLayout('section', sectionLayout);
 layoutRegistry.registerLayout('content', contentLayout);
 layoutRegistry.registerLayout('two-column', twoColumnLayout);
@@ -42,15 +46,144 @@ layoutRegistry.registerLayout('split-60-40', split6040Layout);
 layoutRegistry.registerLayout('quote', quoteLayout);
 layoutRegistry.registerLayout('comparison', comparisonLayout);
 
-// Create a demo deck showcasing all 11 layouts
+// Create deck-specific custom layouts
+// 1. Title with tagline - extends system 'title' layout with additional tagline zone
+const titleWithTaglineLayout = CustomLayoutBuilder.create('title-with-tagline', 'Title layout extended with tagline')
+  .extends('title')
+  .addZone('tagline', 'tagline', 'Small tagline text below subtitle')
+  .setGridTemplateAreas(`
+    "title"
+    "subtitle"
+    "tagline"
+  `)
+  .setGridTemplateRows('1fr auto auto 1fr')
+  .setCustomStyles(`
+    .slide[data-layout="title-with-tagline"] .zone-tagline {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-accent);
+      margin-top: var(--spacing-8);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+    }
+  `)
+  .build();
+
+// 2. Three column data - completely custom layout for data presentations
+const threeColumnDataLayout = CustomLayoutBuilder.create('three-column-data', 'Three column layout for data display')
+  .addZone('heading', 'heading', 'Section heading')
+  .addZone('metric1', 'metric1', 'First metric/data point')
+  .addZone('metric2', 'metric2', 'Second metric/data point')
+  .addZone('metric3', 'metric3', 'Third metric/data point')
+  .addZone('footnote', 'footnote', 'Optional footnote')
+  .setGridTemplateAreas(`
+    "heading heading heading"
+    ". . ."
+    "metric1 metric2 metric3"
+    ". . ."
+    "footnote footnote footnote"
+  `)
+  .setGridTemplateColumns('1fr 1fr 1fr')
+  .setGridTemplateRows('auto 1fr auto 1fr auto')
+  .setCustomStyles(`
+    .slide[data-layout="three-column-data"] {
+      padding: var(--spacing-12);
+      background: linear-gradient(to bottom, var(--color-background), #f8f9fa);
+    }
+
+    .slide[data-layout="three-column-data"] .zone-heading {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary);
+      text-align: center;
+      margin-bottom: var(--spacing-8);
+    }
+
+    .slide[data-layout="three-column-data"] [class*="zone-metric"] {
+      text-align: center;
+      padding: var(--spacing-8);
+      background: white;
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slide[data-layout="three-column-data"] [class*="zone-metric"] strong {
+      font-size: var(--font-size-4xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-secondary);
+      display: block;
+      margin-bottom: var(--spacing-2);
+    }
+
+    .slide[data-layout="three-column-data"] .zone-footnote {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted);
+      text-align: center;
+      font-style: italic;
+      margin-top: var(--spacing-4);
+    }
+  `)
+  .build();
+
+// 3. Content with sidebar - extends system 'content' layout with sidebar
+const contentWithSidebarLayout = CustomLayoutBuilder.create('content-with-sidebar', 'Content layout extended with sidebar')
+  .extends('content')
+  .addZone('sidebar', 'sidebar', 'Sidebar for additional info')
+  .setGridTemplateAreas(`
+    "title title"
+    "content sidebar"
+  `)
+  .setGridTemplateColumns('2fr 1fr')
+  .setGridTemplateRows('auto 1fr')
+  .setCustomStyles(`
+    .slide[data-layout="content-with-sidebar"] {
+      padding: var(--spacing-12);
+      gap: var(--spacing-8);
+    }
+
+    .slide[data-layout="content-with-sidebar"] .zone-sidebar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: var(--spacing-6);
+      border-radius: var(--border-radius-lg);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: var(--font-size-sm);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .slide[data-layout="content-with-sidebar"] .zone-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
+    }
+  `)
+  .build();
+
+// Array of deck-specific custom layouts
+const customLayouts: CustomLayoutDefinition[] = [
+  titleWithTaglineLayout,
+  threeColumnDataLayout,
+  contentWithSidebarLayout
+];
+
+// Create a demo deck showcasing all layouts including custom ones
 const demoDeck: Deck = {
   metadata: {
     title: 'Presentation Framework Demo',
     author: 'Demo Author',
-    description: 'Phase 5 - Debug Mode Showcase',
+    description: 'Phase 6 - Custom Layouts Showcase',
     date: new Date().toISOString().split('T')[0],
   },
   theme: debuggingLeadershipTheme,
+  customLayouts: customLayouts,
   slides: [
     {
       id: 'slide-1',
@@ -67,9 +200,18 @@ const demoDeck: Deck = {
     },
     {
       id: 'slide-2',
-      layout: 'section',
+      layout: 'debugging-leadership-agenda',
       content: {
-        heading: 'Advanced Layouts',
+        'logo': 'Debugging Leadership',
+        'content': `
+          <ul>
+            <li>Why are we talking about this?</li>
+            <li>What are the 9 habits?</li>
+            <li>What do we do about it?</li>
+            <li>Q&A</li>
+          </ul>
+        `,
+        'image': '<img src="/examples/themes/debugging-leadership/media/barista.png" alt="Agenda illustration" />',
       },
     },
     {
@@ -153,6 +295,58 @@ const demoDeck: Deck = {
       content: {
         title: 'Thank You!',
         subtitle: 'All 11 layouts are now implemented (5 core + 6 advanced)',
+      },
+    },
+    // New slides demonstrating deck-specific custom layouts
+    {
+      id: 'slide-12',
+      layout: 'section',
+      content: {
+        heading: 'Custom Deck Layouts',
+      },
+    },
+    {
+      id: 'slide-13',
+      layout: 'title-with-tagline',
+      content: {
+        title: 'Extended Title Layout',
+        subtitle: 'Demonstrating layout inheritance',
+        tagline: 'Extends system title layout',
+      },
+    },
+    {
+      id: 'slide-14',
+      layout: 'three-column-data',
+      content: {
+        heading: 'Performance Metrics',
+        metric1: '<strong>98%</strong>Uptime',
+        metric2: '<strong>1.2s</strong>Load Time',
+        metric3: '<strong>50ms</strong>Response Time',
+        footnote: '* Data collected over the last 30 days',
+      },
+    },
+    {
+      id: 'slide-15',
+      layout: 'content-with-sidebar',
+      content: {
+        title: 'Extended Content Layout',
+        content: 'This layout extends the system content layout by adding a sidebar zone. Perfect for additional context, notes, or related information.',
+        sidebar: '<strong>💡 Sidebar</strong><br><br>This demonstrates extending a system layout with additional zones.',
+      },
+    },
+    {
+      id: 'slide-16',
+      layout: 'content',
+      content: {
+        title: 'Three-Tier Layout System',
+        content: `
+          <ul style="text-align: left; max-width: 600px; margin: 0 auto;">
+            <li><strong>System Layouts:</strong> Core layouts provided by the framework</li>
+            <li><strong>Theme Layouts:</strong> Brand-specific layouts for all decks using the theme</li>
+            <li><strong>Deck Layouts:</strong> Presentation-specific custom layouts</li>
+          </ul>
+          <p style="margin-top: 2rem;">Resolution priority: Deck → Theme → System</p>
+        `,
       },
     },
   ],
