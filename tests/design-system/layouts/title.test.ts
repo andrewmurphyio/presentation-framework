@@ -1,0 +1,68 @@
+import { describe, it, expect } from 'vitest';
+import { titleLayout } from '@/lib/design-system/layouts/title';
+import { LayoutRegistry } from '@/lib/design-system/layout-registry';
+
+describe('Title Layout', () => {
+  it('should have correct name', () => {
+    expect(titleLayout.name).toBe('title');
+  });
+
+  it('should have a description', () => {
+    expect(titleLayout.description).toBeDefined();
+    expect(titleLayout.description.length).toBeGreaterThan(0);
+  });
+
+  it('should have title and subtitle zones', () => {
+    expect(titleLayout.zones).toHaveLength(2);
+
+    const zoneNames = titleLayout.zones.map((z) => z.name);
+    expect(zoneNames).toContain('title');
+    expect(zoneNames).toContain('subtitle');
+  });
+
+  it('should have title zone with correct grid area', () => {
+    const titleZone = titleLayout.zones.find((z) => z.name === 'title');
+    expect(titleZone).toBeDefined();
+    expect(titleZone?.gridArea).toBe('title');
+  });
+
+  it('should have subtitle zone with correct grid area', () => {
+    const subtitleZone = titleLayout.zones.find((z) => z.name === 'subtitle');
+    expect(subtitleZone).toBeDefined();
+    expect(subtitleZone?.gridArea).toBe('subtitle');
+  });
+
+  it('should have CSS grid template areas defined', () => {
+    expect(titleLayout.gridTemplateAreas).toBeDefined();
+    expect(titleLayout.gridTemplateAreas).toContain('title');
+    expect(titleLayout.gridTemplateAreas).toContain('subtitle');
+  });
+
+  it('should have CSS grid template columns', () => {
+    expect(titleLayout.gridTemplateColumns).toBeDefined();
+    expect(titleLayout.gridTemplateColumns).toBe('1fr');
+  });
+
+  it('should have CSS grid template rows for vertical centering', () => {
+    expect(titleLayout.gridTemplateRows).toBeDefined();
+    // Should have spacing before and after for vertical centering
+    expect(titleLayout.gridTemplateRows).toContain('1fr');
+    expect(titleLayout.gridTemplateRows).toContain('auto');
+  });
+
+  it('should be registrable in LayoutRegistry', () => {
+    const registry = new LayoutRegistry();
+    expect(() => registry.registerLayout('title', titleLayout)).not.toThrow();
+
+    const retrieved = registry.getLayout('title');
+    expect(retrieved).toEqual(titleLayout);
+  });
+
+  it('should have zone descriptions', () => {
+    const titleZone = titleLayout.zones.find((z) => z.name === 'title');
+    const subtitleZone = titleLayout.zones.find((z) => z.name === 'subtitle');
+
+    expect(titleZone?.description).toBeDefined();
+    expect(subtitleZone?.description).toBeDefined();
+  });
+});
